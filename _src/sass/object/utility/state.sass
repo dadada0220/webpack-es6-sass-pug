@@ -1,0 +1,12 @@
+@charset "utf-8"
+
+@use "../../foundation/global" as *
+
+.is-sp-hide
+  +max-screen($breackpoint_sp)
+    display: none
+
+.is-pc-hide
+  display: none
+  +max-screen($breackpoint_sp)
+    display: block

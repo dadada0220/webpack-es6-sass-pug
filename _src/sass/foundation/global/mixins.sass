@@ -1,0 +1,90 @@
+@charset "utf-8"
+
+@use "variables" as *
+
+// # Background-image
+// #################################################
+
+=background-image($fileName, $repeat: no-repeat)
+  background-image: url($path_img + $fileName)
+  background-repeat: $repeat
+  background-position: 50% 50%
+
+
+
+// # Icon for Background-image
+// #################################################
+
+=icon($fileName, $width, $height)
+  background: url($path_img + $fileName) no-repeat 50% 50%
+  background-size: $width $height
+  width: $width
+  height: $height
+
+
+
+// # Media Queries
+// #################################################
+
+=max-screen($breakPoint)
+  @media screen and (max-width: $breakPoint)
+    @content
+
+=min-screen($breakPoint)
+  @media screen and (min-width: $breakPoint)
+    @content
+
+=screen($breakPoint_min, $breakPoint_max)
+  @media screen and (min-width: $breakPoint_min) and (max-width: $breakPoint_max)
+    @content
+
+
+
+// # Element center placement
+// #################################################
+
+=center($direction, $other_transform: false)
+  position: absolute
+  @if $direction==xy
+    top: 50%
+    left: 50%
+    @if $other_transform
+      transform: translate(-50%, -50%) $other_transform
+    @else
+      transform: translate(-50%, -50%)
+  @else if $direction==x
+    left: 50%
+    @if $other_transform
+      transform: translateX(-50%) $other_transform
+    @else
+      transform: translateX(-50%)
+  @else if $direction==y
+    top: 50%
+    @if $other_transform
+      transform: translateY(-50%) $other_transform
+    @else
+      transform: translateY(-50%)
+
+
+
+// # Triangle
+// #################################################
+
+=triangle($direction, $width, $height, $color)
+  width: 0
+  height: 0
+  border-style: solid
+  $valWidth: $width / 2
+  $valHeight: $height / 2
+  @if ($direction == top)
+    border-width: 0 $valWidth $height $valWidth
+    border-color: transparent transparent $color transparent
+  @else if ($direction == left)
+    border-width: $valHeight $width $valHeight 0
+    border-color: transparent $color transparent transparent
+  @else if ($direction == right)
+    border-width: $valHeight 0 $valHeight $width
+    border-color: transparent transparent transparent $color
+  @else if ($direction == bottom)
+    border-width: $height $valWidth 0 $valWidth
+    border-color: $color transparent transparent transparent

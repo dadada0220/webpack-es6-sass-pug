@@ -1,0 +1,103 @@
+@charset "utf-8"
+
+@use "../../foundation/global" as *
+
+.u
+  &-fl
+    float: left !important
+  &-fr
+    float: right !important
+  &-fn
+    float: none !important
+
+  &-dn
+    display: none !important
+  &-di
+    display: inline !important
+  &-db
+    display: block !important
+  &-diib
+    display: inline-block !important
+  &-dtb
+    display: table !important
+  &-df
+    display: flex !important
+
+  &-flex
+    display: flex !important
+  &-flex-jf-between
+    justify-content: space-between !important
+  &-flex-jf-around
+    justify-content: space-around !important
+  &-flex-jf-center
+    justify-content: center !important
+  &-flex-jf-start
+    justify-content: flex-start !important
+  &-flex-jf-end
+    justify-content: flex-end !important
+  &-flex-ai-center
+    align-items: center !important
+  &-flex-ai-start
+    align-items: flex-start !important
+  &-flex-ai-end
+    align-items: flex-end !important
+  &-flex-0-0-auto
+    flex: 0 0 auto !important
+  &-flex-1-1-auto
+    flex: 1 1 auto !important
+
+  &-position-ab
+    position: absolute !important
+  &-position-rt
+    position: relative !important
+  &-position-st
+    position: static !important
+
+  &-border-top-none
+    border-top: none !important
+  &-border-left-none
+    border-left: none !important
+  &-border-right-none
+    border-right: none !important
+  &-border-bottom-none
+    border-bottom: none !important
+
+  &-width-100p
+    width: 100% !important
+  &-width-auto
+    width: auto !important
+  &-height-100p
+    height: 100% !important
+  &-height-auto
+    height: auto !important
+
+  &-font-we-normal
+    font-weight: normal !important
+  &-font-we-bold
+    font-weight: bold !important
+
+  &-text-align-center
+    text-align: center !important
+  &-text-align-left
+    text-align: left !important
+  &-text-align-right
+    text-align: right !important
+
+// margin
+$marginType: (top: ("mt", "margin-top"), left: ("ml", "margin-left"), right: ("mr", "margin-right"), bottom: ("mb", "margin-bottom"))
+@each $key, $value in $marginType
+  @for $i from 0 through 20
+    .u-#{nth($value, 1)}#{$i * 4}
+      #{nth($value, 2)}: #{$i * 4}px !important
+
+// padding
+$paddingType: (top: ("pt", "padding-top"), left: ("pl", "padding-left"), right: ("pr", "padding-right"), bottom: ("pb", "padding-bottom"))
+@each $key, $value in $paddingType
+  @for $i from 0 through 10
+    .u-#{nth($value, 1)}#{$i * 4}
+      #{nth($value, 2)}: #{$i * 4}px !important
+
+// width
+@for $i from 0 through 20
+  .u-w#{$i * 20}
+    width: #{$i * 20}px !important

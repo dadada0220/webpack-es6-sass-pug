@@ -8,14 +8,12 @@ module.exports = {
 
   entry: {
     application: path.resolve(__dirname, '_src/js/_index.js'),
-    'style.css': path.resolve(__dirname, '_src/sass/_style.sass'),
-    'firstview.css': path.resolve(__dirname, '_src/sass/_firstview.sass'),
-    'firstview.php': path.resolve(__dirname, '_src/sass/_firstview.sass')
+    'style.css': path.resolve(__dirname, '_src/sass/_index.sass'),
   },
 
   output: {
     filename: 'js/[name].js',
-    path: path.resolve(__dirname, 'assets')
+    path: path.resolve(__dirname, 'public/assets')
   },
 
   plugins: [
