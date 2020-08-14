@@ -1,35 +1,37 @@
+const webpack = require('webpack');
 const path = require('path');
+const globule = require('globule');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries')
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 
-module.exports = {
+const dir = {
+  src: path.join(__dirname, 'src'),
+  public: path.join(__dirname, 'public')
+};
 
+const scssAndJsConfig = {
   entry: {
-    application: path.resolve(__dirname, '_src/js/_index.js'),
-    'style.css': path.resolve(__dirname, '_src/sass/_index.sass'),
+    application: path.resolve(dir.src, 'js/_index.js'),
+    'style.css': path.resolve(dir.src, 'sass/_index.sass'),
   },
-
   output: {
     filename: 'js/[name].js',
-    path: path.resolve(__dirname, 'public/assets')
+    path: path.resolve(dir.public, 'assets')
   },
-
   plugins: [
     new FixStyleOnlyEntriesPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/[name]',
     })
   ],
-
   resolve: {
     modules: ['node_modules'],
     extensions: ['.js', '.css'],
   },
-
   devtool: 'source-map',
-
   optimization: {
     minimizer: [
       new OptimizeCSSAssetsPlugin(),
@@ -45,7 +47,6 @@ module.exports = {
       })
     ],
   },
-
   module: {
     rules: [{
         test: /\.js$/,
@@ -86,11 +87,59 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: true,
+              sourceMap: true
             }
-          },
-        ],
-      },
+          }
+        ]
+      }
     ]
   }
-};
+}
+
+
+
+const from = 'pug'
+const to = 'html'
+const entry = {}
+
+globule.find([`**/*.${from}`, `!**/_*.${from}`], {
+  cwd: dir.src
+}).forEach(filename => {
+  let _output = filename.replace(new RegExp(`.${from}$`, 'i'), `.${to}`);
+  let _source = path.join(dir.src, filename);
+  if (_output.indexOf('pug/') !== -1) {
+    _output = _output.replace('pug/', '');
+    entry[_output] = _source;
+  }
+});
+
+const pugConfig = {
+  entry: entry,
+  output: {
+    filename: '[name]',
+    publicPath: '/',
+    path: dir.public
+  },
+  module: {
+    rules: [{
+      test: /\.pug$/,
+      use: ExtractTextPlugin.extract({
+        use: [
+          'html-loader',
+          {
+            loader: 'pug-html-loader',
+            options: {
+              pretty: true,
+            }
+          }
+        ]
+      })
+    }]
+  },
+  plugins: [new ExtractTextPlugin('[name]')],
+}
+
+module.exports = [
+  scssAndJsConfig,
+  pugConfig
+];

@@ -1,8 +1,9 @@
-# webpack（Sass + ES6）
-SassとES6をコンパイルできるwebpackのテンプレート  
+# webpack（ES6 + Sass + Pug）
+ES6、Sass、Pugをコンパイルできるwebpackのテンプレート  
 Node.js：`12.18.3`での動作確認済み  
 
 ## 主な機能
+- PugをHTMLにコンパイル
 - Sass（Scss）をCSSにコンパイル  
 - ES6をES5にコンパイル  
 - cssとjsをそれぞれ別ファイルとして出力  

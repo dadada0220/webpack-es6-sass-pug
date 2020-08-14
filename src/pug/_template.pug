@@ -1,0 +1,22 @@
+- var PATH_ROOT = "/";
+
+block config
+  include ./_config
+
+doctype html
+
+html(lang="ja")
+  head
+    include module/_head
+
+    title #{TITLE}
+    meta(name="description", content="")
+
+  body
+    #wrap
+      include module/_header
+
+      .p-page-wrap
+        block content
+
+      include module/_footer

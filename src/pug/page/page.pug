@@ -1,0 +1,10 @@
+extend ../_template
+
+block prepend config
+  - var PATH_ROOT = "../";
+
+block append config
+  - var TITLE = "page | " + TITLE
+
+block content
+  p is page/page.html
