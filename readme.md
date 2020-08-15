@@ -31,7 +31,7 @@ npm run build
 ```
 
 ## Pugが不要の場合
-`webpack.config.js`の以下の記述を編集
+`webpack.config.js`の以下の記述を編集  
 `pugConfig`の部分をコメントアウトか削除する
 ```
 module.exports = [
