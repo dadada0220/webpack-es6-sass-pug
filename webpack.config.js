@@ -1,16 +1,23 @@
 const webpack = require('webpack');
-const path = require('path');
 const globule = require('globule');
+const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const TerserPlugin = require('terser-webpack-plugin');
 
+/**
+ * 出力元と出力先のディレクトリを定義
+ */
 const dir = {
   src: path.join(__dirname, 'src'),
   public: path.join(__dirname, 'public')
 };
+
+/**
+ * sassとjsの設定を定義
+ */
 
 const scssAndJsConfig = {
   entry: {
@@ -96,7 +103,9 @@ const scssAndJsConfig = {
   }
 }
 
-
+/**
+ * pugの設定を定義
+ */
 
 const from = 'pug'
 const to = 'html'
@@ -138,6 +147,10 @@ const pugConfig = {
   },
   plugins: [new ExtractTextPlugin('[name]')],
 }
+
+/**
+ * 実行
+ */
 
 module.exports = [
   scssAndJsConfig,
