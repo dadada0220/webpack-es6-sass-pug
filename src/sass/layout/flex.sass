@@ -1,0 +1,40 @@
+@charset "utf-8"
+
+@use "../foundation/global" as *
+
+.l-flex
+  display: flex
+  flex-wrap: wrap
+
+  &.__col-center
+    justify-content: center
+  &.__col-between
+    justify-content: space-between
+  &.__col-start
+    justify-content: flex-start
+  &.__col-end
+    justify-content: flex-end
+
+  &.__row-center
+    align-items: center
+  &.__row-start
+    align-items: flex-start
+  &.__row-end
+    align-items: flex-end
+
+  &.__nowrap
+    flex-wrap: nowrap
+
+  &.__dir-col
+    flex-direction: column
+  &.__dir-col-r
+    flex-direction: column-reverse
+  &.__dir-row
+    flex-direction: row
+  &.__dir-row-r
+    flex-direction: row-reverse
+
+  .__flex-00auto
+    flex: 0 0 auto
+  .__flex-11auto
+    flex: 1 1 auto

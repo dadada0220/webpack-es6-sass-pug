@@ -3,7 +3,10 @@ export default class PiyoClass {
     this.elm = document.querySelector(`${obj.elm}`)
     this.attr = obj.attr
   }
-  method() {
-    console.log(this.elm)
+  addEvent() {
+
+  }
+  init() {
+    this.addEvent()
   }
 }
