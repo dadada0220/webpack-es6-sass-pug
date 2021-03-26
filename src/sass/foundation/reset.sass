@@ -223,16 +223,16 @@ input,
 button,
 textarea,
 select
+  display: block
   color: $c--text
   font-size: 16px
-  display: block
-  margin: 0
-  padding: 0
-  width: 100%
   background: none
   border: none
   border-radius: 0
   outline: none
+  width: 100%
+  margin: 0
+  padding: 0
   -webkit-appearance: none
   -moz-appearance: none
   appearance: none
@@ -253,13 +253,6 @@ select
     -webkit-appearance: none
     margin: 0
 
-button
-  display: block
-  color: $c--white
-  font-size: 14px
-  background-color: $c--black
-  cursor: pointer
-
 input,
 textarea,
 select
@@ -274,6 +267,9 @@ select
 
 textarea
   min-height: 100px
+
+button
+  cursor: pointer
 
 %__input_radio_check_hide
   // display: none で消すのはアクセシビリティ的によろしくない

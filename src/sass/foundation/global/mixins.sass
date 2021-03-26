@@ -2,28 +2,28 @@
 
 @use "variables" as *
 
-// # Background-image
+// # 背景画像
 // #################################################
 
-=background-image($fileName, $repeat: no-repeat)
-  background-image: url($path_img + $fileName)
+=background-image($file_name, $repeat: no-repeat)
+  background-image: url($path_img + $file_name)
   background-repeat: $repeat
   background-position: 50% 50%
 
 
 
-// # Icon for Background-image
+// # アイコン（背景画像）
 // #################################################
 
-=icon($fileName, $width, $height)
-  background: url($path_img + $fileName) no-repeat 50% 50%
+=icon($file_name, $width, $height)
+  background: url($path_img + $file_name) no-repeat 50% 50%
   background-size: $width $height
   width: $width
   height: $height
 
 
 
-// # Media Queries
+// # メディアクエリ
 // #################################################
 
 =max-screen($breakPoint)
@@ -40,7 +40,7 @@
 
 
 
-// # Element center placement
+// # 要素を中央配置
 // #################################################
 
 =center($direction, $other_transform: false)
@@ -67,24 +67,69 @@
 
 
 
-// # Triangle
+// # 三角形を生成
 // #################################################
 
+// 塗りvar.
 =triangle($direction, $width, $height, $color)
   width: 0
   height: 0
   border-style: solid
-  $valWidth: $width / 2
-  $valHeight: $height / 2
+  $border_width: $width / 2
+  $border_height: $height / 2
   @if ($direction == top)
-    border-width: 0 $valWidth $height $valWidth
+    border-width: 0 $border_width $height $border_width
     border-color: transparent transparent $color transparent
   @else if ($direction == left)
-    border-width: $valHeight $width $valHeight 0
+    border-width: $border_height $width $border_height 0
     border-color: transparent $color transparent transparent
   @else if ($direction == right)
-    border-width: $valHeight 0 $valHeight $width
+    border-width: $border_height 0 $border_height $width
     border-color: transparent transparent transparent $color
   @else if ($direction == bottom)
-    border-width: $height $valWidth 0 $valWidth
+    border-width: $height $border_width 0 $border_width
     border-color: $color transparent transparent transparent
+  @else if ($direction == right-top)
+    border-width: $border_width $border_width $border_width $border_width
+    border-color: $color $color transparent transparent
+  @else if ($direction == right-bottom)
+    border-width: $border_width $border_width $border_width $border_width
+    border-color: transparent $color $color transparent
+  @else if ($direction == left-top)
+    border-width: $border_width $border_width $border_width $border_width
+    border-color: $color transparent transparent $color
+  @else if ($direction == left-bottom)
+    border-width: $border_width $border_width $border_width $border_width
+    border-color: transparent transparent $color $color
+
+// 線var.
+=triangle_border($direction, $border_width, $color, $size: 20px)
+  width: $size
+  height: $size
+  border-top: solid $border_width $color
+  border-left: solid $border_width $color
+  @if ($direction == top)
+    transform: rotate(45deg)
+  @if ($direction == right-top)
+    transform: rotate(90deg)
+  @if ($direction == right)
+    transform: rotate(135deg)
+  @if ($direction == right-bottom)
+    transform: rotate(180deg)
+  @if ($direction == bottom)
+    transform: rotate(225deg)
+  @if ($direction == left-bottom)
+    transform: rotate(270deg)
+  @if ($direction == left)
+    transform: rotate(315deg)
+  @if ($direction == left-top)
+    transform: rotate(0deg)
+
+
+
+// # テキストに下線（複数行対応）
+// #################################################
+
+=underline-text($color: #ff0, $height: 65%)
+  display: inline
+  background: linear-gradient(transparent $height, $color 0%)

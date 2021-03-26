@@ -6,6 +6,16 @@
   display: flex
   flex-wrap: wrap
 
+  &.__pc
+    +max-screen($breackpoint_pc)
+      display: block
+  &.__tb
+    +max-screen($breackpoint_tb)
+      display: block
+  &.__sp
+    +max-screen($breackpoint_sp)
+      display: block
+
   &.__col-center
     justify-content: center
   &.__col-between

@@ -233,16 +233,16 @@ input,
 button,
 textarea,
 select {
+  display: block;
   color: #333;
   font-size: 16px;
-  display: block;
-  margin: 0;
-  padding: 0;
-  width: 100%;
   background: none;
   border: none;
   border-radius: 0;
   outline: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -284,14 +284,6 @@ select::-webkit-inner-spin-button {
   margin: 0;
 }
 
-button {
-  display: block;
-  color: #fff;
-  font-size: 14px;
-  background-color: #333;
-  cursor: pointer;
-}
-
 input,
 textarea,
 select {
@@ -310,6 +302,10 @@ select[readonly] {
 
 textarea {
   min-height: 100px;
+}
+
+button {
+  cursor: pointer;
 }
 
 input[type=checkbox], input[type=radio] {
@@ -350,7 +346,7 @@ input[type=radio] + label::after {
   display: none;
   width: 14px;
   height: 14px;
-  background-color: #ffaeae;
+  background-color: #014c86;
   border-radius: 50%;
   position: absolute;
   top: 5px;
@@ -380,8 +376,8 @@ input[type=checkbox] + label::before {
   left: 0;
 }
 input[type=checkbox]:checked + label::before {
-  background-color: #ffaeae;
-  border-color: #ffaeae;
+  background-color: #014c86;
+  border-color: #014c86;
 }
 
 input[type=checkbox] + label::after {
@@ -419,7 +415,102 @@ select {
   font-size: 16px;
   font-family: "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
   line-height: 1.7;
-  letter-spacing: 0.05em;
+}
+
+.l-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+@media screen and (max-width: 1080px) {
+  .l-flex.__pc {
+    display: block;
+  }
+}
+@media screen and (max-width: 750px) {
+  .l-flex.__tb {
+    display: block;
+  }
+}
+@media screen and (max-width: 375px) {
+  .l-flex.__sp {
+    display: block;
+  }
+}
+.l-flex.__col-center {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.l-flex.__col-between {
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.l-flex.__col-start {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+.l-flex.__col-end {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.l-flex.__row-center {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.l-flex.__row-start {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.l-flex.__row-end {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+.l-flex.__nowrap {
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+}
+.l-flex.__dir-col {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.l-flex.__dir-col-r {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+}
+.l-flex.__dir-row {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+.l-flex.__dir-row-r {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+}
+.l-flex .__flex-00auto {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+}
+.l-flex .__flex-11auto {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
 }
 
 .l-outer {
@@ -439,16 +530,19 @@ select {
   margin-right: auto;
 }
 
-.c-heading {
-  display: block;
-}
-
-.p-header {
-  position: relative;
+.c-section {
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
 .p-footer {
-  position: relative;
+  background-color: #333;
+  padding: 20px 20px;
+}
+.p-footer__copyright {
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
 }
 
 .u-fl {
@@ -472,68 +566,6 @@ select {
 .u-diib {
   display: inline-block !important;
 }
-.u-dtb {
-  display: table !important;
-}
-.u-df {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-}
-.u-flex {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-}
-.u-flex-jf-between {
-  -webkit-box-pack: justify !important;
-      -ms-flex-pack: justify !important;
-          justify-content: space-between !important;
-}
-.u-flex-jf-around {
-  -ms-flex-pack: distribute !important;
-      justify-content: space-around !important;
-}
-.u-flex-jf-center {
-  -webkit-box-pack: center !important;
-      -ms-flex-pack: center !important;
-          justify-content: center !important;
-}
-.u-flex-jf-start {
-  -webkit-box-pack: start !important;
-      -ms-flex-pack: start !important;
-          justify-content: flex-start !important;
-}
-.u-flex-jf-end {
-  -webkit-box-pack: end !important;
-      -ms-flex-pack: end !important;
-          justify-content: flex-end !important;
-}
-.u-flex-ai-center {
-  -webkit-box-align: center !important;
-      -ms-flex-align: center !important;
-          align-items: center !important;
-}
-.u-flex-ai-start {
-  -webkit-box-align: start !important;
-      -ms-flex-align: start !important;
-          align-items: flex-start !important;
-}
-.u-flex-ai-end {
-  -webkit-box-align: end !important;
-      -ms-flex-align: end !important;
-          align-items: flex-end !important;
-}
-.u-flex-0-0-auto {
-  -webkit-box-flex: 0 !important;
-      -ms-flex: 0 0 auto !important;
-          flex: 0 0 auto !important;
-}
-.u-flex-1-1-auto {
-  -webkit-box-flex: 1 !important;
-      -ms-flex: 1 1 auto !important;
-          flex: 1 1 auto !important;
-}
 .u-position-ab {
   position: absolute !important;
 }
@@ -555,16 +587,16 @@ select {
 .u-border-bottom-none {
   border-bottom: none !important;
 }
-.u-width-100p {
+.u-w-100p {
   width: 100% !important;
 }
-.u-width-auto {
+.u-w-auto {
   width: auto !important;
 }
-.u-height-100p {
+.u-h-100p {
   height: 100% !important;
 }
-.u-height-auto {
+.u-h-auto {
   height: auto !important;
 }
 .u-font-we-normal {
@@ -573,13 +605,13 @@ select {
 .u-font-we-bold {
   font-weight: bold !important;
 }
-.u-text-align-center {
+.u-text-center {
   text-align: center !important;
 }
-.u-text-align-left {
+.u-text-left {
   text-align: left !important;
 }
-.u-text-align-right {
+.u-text-right {
   text-align: right !important;
 }
 
