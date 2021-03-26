@@ -202,10 +202,8 @@ a
   width: 100%
   height: 100%
   text-decoration: none
-  transition: .2s
   &:hover
     color: inherit
-    transition: .2s
 
 img
   vertical-align: middle
@@ -277,9 +275,23 @@ select
 textarea
   min-height: 100px
 
+%__input_radio_check_hide
+  // display: none で消すのはアクセシビリティ的によろしくない
+  // https://github.com/mike-engel/a11y-css-reset
+  position: absolute
+  white-space: nowrap
+  width: 1px
+  height: 1px
+  overflow: hidden
+  border: 0
+  padding: 0
+  clip: rect(0 0 0 0)
+  clip-path: inset(50%)
+  margin: -1px
+
 input[type="radio"]
   $parent_radio: &
-  display: none
+  @extend %__input_radio_check_hide
   + label
     margin-right: 20px
     margin-bottom: 4px
@@ -312,7 +324,7 @@ input[type="radio"]
 
 input[type="checkbox"]
   $parent_checkbox: &
-  display: none
+  @extend %__input_radio_check_hide
   + label
     margin-right: 20px
     margin-bottom: 4px
