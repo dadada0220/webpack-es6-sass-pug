@@ -11,7 +11,7 @@ const TerserPlugin = require('terser-webpack-plugin');
  * 出力元と出力先のディレクトリを定義
  */
 const dir = {
-  src: path.join(__dirname, 'src'),
+  src: path.join(__dirname, '_src'),
   public: path.join(__dirname, 'public')
 };
 
