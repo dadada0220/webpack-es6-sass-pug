@@ -52,10 +52,7 @@
               <h1 class="p-hero__head">H1</h1>
             </div>
           </div>
-        </div><a href="#hoge">fasdfsad</a>
-        <p style="height: 1000px"></p>
-        <div id="hoge">hogehogheo</div>
-        <p style="height: 1000px"></p>
+        </div>
         <main class="l-main">
           <section class="c-section p-xxx">
             <div class="l-outer">
@@ -63,6 +60,36 @@
                 <h2 class="c-section__head p-xxx__head">Heading</h2>
                 <div class="c-section__content p-xxx__content">
                   <p>Content</p>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="c-section p-test">
+            <div class="l-outer">
+              <div class="c-section__inner p-test__inner l-inner">
+                <h2 class="c-section__head p-test__head">Form</h2>
+                <div class="c-section__content p-test__content">
+                  <form id="form">
+                    <div>
+                      <label>氏名</label>
+                      <input type="text" name="name" required title="入力してください">
+                    </div>
+                    <div>
+                      <label>メールアドレス</label>
+                      <input type="email" name="email" required pattern="^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+$" title="メールアドレスの形式で入力してください">
+                    </div>
+                    <div>
+                      <label>電話番号</label>
+                      <input type="tel" name="tel" required pattern="^0d{9,10}$" title="電話番号の形式で入力してください">
+                    </div>
+                    <div>
+                      <label>任意項目</label>
+                      <input type="text" name="nini">
+                    </div>
+                    <div>
+                      <button>送信</button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>

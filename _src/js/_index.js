@@ -1,6 +1,7 @@
 // import adjustViewport from './function/adjustViewport'
 
 import DrawerMenu from './module/DrawerMenu'
+import FormValidator from './module/FormValidator'
 import SmoothScroll from './module/SmoothScroll'
 
 const init = () => {
@@ -14,12 +15,24 @@ const init = () => {
     })
     headerDrawerMenu.init()
   })();
+
   (() => {
     const smoothScroll = new SmoothScroll({
       targets: 'a[href^="#"]',
       fixHeader: '#js-header',
     })
     smoothScroll.init()
+  })();
+
+  (() => {
+    // const form = document.querySelector('.form')
+    // const fields = ["username", "email", "password", "password_confirmation"]
+    // const validator = new FormValidator(form, fields)
+    // validator.initialize()
+    const form = document.querySelector('.form')
+    const fields = ["username", "email", "password", "password_confirmation"]
+    const validator = new FormValidator(form, fields)
+    validator.initialize()
   })();
 }
 

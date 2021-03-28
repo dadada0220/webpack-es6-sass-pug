@@ -96,8 +96,10 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _module_DrawerMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module/DrawerMenu */ "./_src/js/module/DrawerMenu.js");
-/* harmony import */ var _module_SmoothScroll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./module/SmoothScroll */ "./_src/js/module/SmoothScroll.js");
+/* harmony import */ var _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./module/FormValidator */ "./_src/js/module/FormValidator.js");
+/* harmony import */ var _module_SmoothScroll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./module/SmoothScroll */ "./_src/js/module/SmoothScroll.js");
 // import adjustViewport from './function/adjustViewport'
+
 
 
 
@@ -114,11 +116,22 @@ var init = function init() {
   })();
 
   (function () {
-    var smoothScroll = new _module_SmoothScroll__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    var smoothScroll = new _module_SmoothScroll__WEBPACK_IMPORTED_MODULE_2__["default"]({
       targets: 'a[href^="#"]',
       fixHeader: '#js-header'
     });
     smoothScroll.init();
+  })();
+
+  (function () {
+    // const form = document.querySelector('.form')
+    // const fields = ["username", "email", "password", "password_confirmation"]
+    // const validator = new FormValidator(form, fields)
+    // validator.initialize()
+    var form = document.querySelector('.form');
+    var fields = ["username", "email", "password", "password_confirmation"];
+    var validator = new _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__["default"](form, fields);
+    validator.initialize();
   })();
 };
 
@@ -283,6 +296,132 @@ var DrawerMenu = /*#__PURE__*/function () {
   }]);
 
   return DrawerMenu;
+}();
+
+
+
+/***/ }),
+
+/***/ "./_src/js/module/FormValidator.js":
+/*!*****************************************!*\
+  !*** ./_src/js/module/FormValidator.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return FormValidator; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var FormValidator = /*#__PURE__*/function () {
+  function FormValidator(form, fields) {
+    _classCallCheck(this, FormValidator);
+
+    this.form = form;
+    this.fields = fields;
+  }
+
+  _createClass(FormValidator, [{
+    key: "initialize",
+    value: function initialize() {
+      this.validateOnEntry();
+      this.validateOnSubmit();
+    }
+  }, {
+    key: "validateOnSubmit",
+    value: function validateOnSubmit() {
+      var self = this;
+      this.form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        self.fields.forEach(function (field) {
+          var input = document.querySelector("#".concat(field));
+          self.validateFields(input);
+        });
+      });
+    }
+  }, {
+    key: "validateOnEntry",
+    value: function validateOnEntry() {
+      var self = this;
+      this.fields.forEach(function (field) {
+        var input = document.querySelector("#".concat(field));
+        input.addEventListener('input', function (event) {
+          self.validateFields(input);
+        });
+      });
+    }
+  }, {
+    key: "validateFields",
+    value: function validateFields(field) {
+      // Check presence of values
+      if (field.value.trim() === "") {
+        this.setStatus(field, "".concat(field.previousElementSibling.innerText, " cannot be blank"), "error");
+      } else {
+        this.setStatus(field, null, "success");
+      } // check for a valid email address
+
+
+      if (field.type === "email") {
+        var re = /\S+@\S+\.\S+/;
+
+        if (re.test(field.value)) {
+          this.setStatus(field, null, "success");
+        } else {
+          this.setStatus(field, "Please enter valid email address", "error");
+        }
+      } // Password confirmation edge case
+
+
+      if (field.id === "password_confirmation") {
+        var passwordField = this.form.querySelector('#password');
+
+        if (field.value.trim() == "") {
+          this.setStatus(field, "Password confirmation required", "error");
+        } else if (field.value != passwordField.value) {
+          this.setStatus(field, "Password does not match", "error");
+        } else {
+          this.setStatus(field, null, "success");
+        }
+      }
+    }
+  }, {
+    key: "setStatus",
+    value: function setStatus(field, message, status) {
+      var successIcon = field.parentElement.querySelector('.icon-success');
+      var errorIcon = field.parentElement.querySelector('.icon-error');
+      var errorMessage = field.parentElement.querySelector('.error-message');
+
+      if (status === "success") {
+        if (errorIcon) {
+          errorIcon.classList.add('hidden');
+        }
+
+        if (errorMessage) {
+          errorMessage.innerText = "";
+        }
+
+        successIcon.classList.remove('hidden');
+        field.classList.remove('input-error');
+      }
+
+      if (status === "error") {
+        if (successIcon) {
+          successIcon.classList.add('hidden');
+        }
+
+        field.parentElement.querySelector('.error-message').innerText = message;
+        errorIcon.classList.remove('hidden');
+        field.classList.add('input-error');
+      }
+    }
+  }]);
+
+  return FormValidator;
 }();
 
 
