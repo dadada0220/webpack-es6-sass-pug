@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script src="/assets/js/application.js" defer></script>
     <link rel="stylesheet" href="/assets/css/style.css" media="print" onload="this.media='all'">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="/assets/img/favicon/favicon.ico">
     <link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
@@ -15,9 +15,32 @@
     <div id="wrap">
       <div class="l-header">
         <header class="p-header">
-          <div class="l-outer">
-            <div class="p-header__inner">
-              <div class="p-header__logo"><a href=""><img src="/assets/img/_common/logo.png" alt="ロゴ"></a></div>
+          <div class="p-header__inner l-flex __row-center __col-between">
+            <div class="p-header-logo"><a href=""><img src="/assets/img/_common/logo.svg" alt="ロゴ" width="120px" height="32.67px"></a></div>
+            <nav class="p-header-menu-nav">
+              <ul class="p-header-menu-nav__lists">
+                <li class="p-header-menu-nav__item"><a href=""><span>TOP</span></a></li>
+                <li class="p-header-menu-nav__item"><a href=""><span>事業内容</span></a></li>
+                <li class="p-header-menu-nav__item"><a href=""><span>会社概要</span></a></li>
+                <li class="p-header-menu-nav__item"><a href=""><span>お知らせ</span></a></li>
+                <li class="p-header-menu-nav__item"><a href=""><span>お問い合わせ</span></a></li>
+              </ul>
+            </nav>
+            <div class="p-header-drawer">
+              <button class="p-header-drawer-btn" id="js-drawer-open-btn" type="button" aria-label="メニューを開く" data-active="false"><span></span></button>
+              <div class="p-header-drawer-menu">
+                <div class="p-header-drawer-menu-bg" id="js-drawer-menu-bg"></div>
+                <nav class="p-header-drawer-menu-nav" id="js-drawer-menu-nav" data-active="false">
+                  <button class="p-header-drawer-menu-nav__close-btn" id="js-drawer-close-btn" type="button" aria-label="メニューを閉じる"></button>
+                  <ul class="p-header-drawer-menu-nav__lists">
+                    <li class="p-header-drawer-menu-nav__item"><a href=""><span>TOP</span></a></li>
+                    <li class="p-header-drawer-menu-nav__item"><a href=""><span>事業内容</span></a></li>
+                    <li class="p-header-drawer-menu-nav__item"><a href=""><span>会社概要</span></a></li>
+                    <li class="p-header-drawer-menu-nav__item"><a href=""><span>お知らせ</span></a></li>
+                    <li class="p-header-drawer-menu-nav__item"><a href=""><span>お問い合わせ</span></a></li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </header>

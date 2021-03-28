@@ -3,3 +3,176 @@
 @use "../../foundation/global" as *
 
 .p-header
+  $header_size: 80px
+  height: $header_size
+  &__inner
+    background-color: $c--white
+    border-bottom: solid 1px $c--gray-s
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    padding-left: 20px
+
+  &-logo
+    width: 120px
+    a
+      display: block
+      transition: opacity .2s
+      &:hover
+        opacity: 0.7
+        transition: opacity .2s
+
+  &-menu-nav
+    margin-left: auto
+    &__lists
+      display: flex
+      align-items: center
+    &__item
+      color: $c--black
+      &:not(:first-of-type)
+        margin-left: 20px
+      a
+        display: block
+        color: $c--black
+        font-size: 15px
+        font-weight: bold
+        padding: 10px 10px
+
+  &-drawer-btn
+    $parent_drawer_btn: &
+    background-color: $c--primary
+    width: $header_size
+    height: $header_size
+    margin-left: 40px
+    position: relative
+    transition: opacity .2s
+    &:hover
+      opacity: 0.9
+      transition: opacity .2s
+    &::before,
+    &::after,
+    span
+      content: ""
+      display: block
+      background-color: $c--white
+      width: 28px
+      height: 2px
+      transition: opacity .2s, transform .2s, margin .2s
+    &::before
+      margin-top: -6px
+      +center(xy)
+      @at-root #{$parent_drawer_btn}[data-active="true"]::before
+        +center(xy, rotate(45deg))
+        margin: 0
+    &::after
+      margin-top: 6px
+      +center(xy)
+      @at-root #{$parent_drawer_btn}[data-active="true"]::after
+        +center(xy, rotate(-45deg))
+        margin: 0
+    span
+      margin: auto
+      @at-root #{$parent_drawer_btn}[data-active="true"] span
+        opacity: 0
+
+  &-drawer-menu
+    &-bg
+      position: fixed
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      opacity: 0
+      visibility: hidden
+      transition: opacity .5s, visibility .5s
+      z-index: -1
+      &[data-active="true"]
+        opacity: 1
+        visibility: visible
+        background-color: rgba($c--black, .7)
+      &[data-active="false"]
+        background-color: rgba($c--black, .7)
+    &-nav
+      position: fixed
+      top: 0
+      right: 0
+      background-color: $c--white
+      width: 90%
+      max-width: 400px
+      height: 100%
+      box-shadow: -2px 16px 16px rgba(#000, .1)
+      transition: right .9s
+      &[data-active="true"]
+        right: 0
+        transition: right .6s
+      &[data-active="false"]
+        right: -100%
+      &__close-btn
+        background-color: $c--black
+        width: $header_size
+        height: $header_size
+        margin-left: auto
+        position: relative
+        transition: opacity .2s
+        &:hover
+          opacity: 0.9
+          transition: opacity .2s
+        &::before,
+        &::after
+          content: ""
+          display: block
+          background-color: $c--gray-s
+          width: 28px
+          height: 2px
+        &::before
+          +center(xy, rotate(45deg))
+        &::after
+          +center(xy, rotate(-45deg))
+      &__lists
+        border-top: solid 1px $c--gray-s
+      &__item
+        color: $c--black
+        border-bottom: solid 1px $c--gray-s
+        a
+          $parent_menu_nav_link: &
+          display: block
+          color: $c--black
+          font-size: 15px
+          font-weight: bold
+          padding: 20px 20px
+          position: relative
+          &::before
+            content: ""
+            display: block
+            +triangle_border(right, 2px, $c--primary, 6px)
+            position: absolute
+            top: 0
+            bottom: 0
+            right: 20px
+            z-index: 1
+            margin: auto
+            transition: right .2s ease-in-out
+            @at-root #{$parent_menu_nav_link}:hover::before
+              right: 18px
+              transition: right .2s ease-in-out
+          &::after
+            content: ""
+            display: block
+            position: absolute
+            top: 0px
+            left: 0px
+            width: 100%
+            height: 100%
+            background-color: $c--gray-s
+            opacity: 0.5
+            transform: scaleX(0)
+            transform-origin: right
+            transition: transform .2s ease-in-out, opacity .2s ease-in-out
+            @at-root #{$parent_menu_nav_link}:hover::after
+              transform: scaleX(1)
+              transform-origin: left
+              opacity: 1
+          span
+            position: relative
+            z-index: 1

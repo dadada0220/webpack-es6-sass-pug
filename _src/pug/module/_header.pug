@@ -1,6 +1,35 @@
 header.p-header
-  .l-outer
-    .p-header__inner
-      .p-header__logo
-        a(href="")
-          img(src= PATH_IMG + "_common/logo.png", alt="ロゴ")
+  .p-header__inner.l-flex.__row-center.__col-between
+    .p-header-logo
+      a(href="")
+        img(src= PATH_IMG + "_common/logo.svg", alt="ロゴ", width="120px", height="32.67px")
+    nav.p-header-menu-nav
+      ul.p-header-menu-nav__lists
+        li.p-header-menu-nav__item
+          a(href=""): span TOP
+        li.p-header-menu-nav__item
+          a(href=""): span 事業内容
+        li.p-header-menu-nav__item
+          a(href=""): span 会社概要
+        li.p-header-menu-nav__item
+          a(href=""): span お知らせ
+        li.p-header-menu-nav__item
+          a(href=""): span お問い合わせ
+    .p-header-drawer
+      button.p-header-drawer-btn#js-drawer-open-btn(type="button", aria-label="メニューを開く", data-active="false")
+        span
+      .p-header-drawer-menu
+        .p-header-drawer-menu-bg#js-drawer-menu-bg
+        nav.p-header-drawer-menu-nav#js-drawer-menu-nav(data-active="false")
+          button.p-header-drawer-menu-nav__close-btn#js-drawer-close-btn(type="button", aria-label="メニューを閉じる")
+          ul.p-header-drawer-menu-nav__lists
+            li.p-header-drawer-menu-nav__item
+              a(href=""): span TOP
+            li.p-header-drawer-menu-nav__item
+              a(href=""): span 事業内容
+            li.p-header-drawer-menu-nav__item
+              a(href=""): span 会社概要
+            li.p-header-drawer-menu-nav__item
+              a(href=""): span お知らせ
+            li.p-header-drawer-menu-nav__item
+              a(href=""): span お問い合わせ
