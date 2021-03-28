@@ -1,6 +1,7 @@
 // import adjustViewport from './function/adjustViewport'
 
 import DrawerMenu from './module/DrawerMenu'
+import SmoothScroll from './module/SmoothScroll'
 
 const init = () => {
   (() => {
@@ -12,6 +13,13 @@ const init = () => {
       attrToggle: 'data-active',
     })
     headerDrawerMenu.init()
+  })();
+  (() => {
+    const smoothScroll = new SmoothScroll({
+      targets: 'a[href^="#"]',
+      fixHeader: '#js-header',
+    })
+    smoothScroll.init()
   })();
 }
 

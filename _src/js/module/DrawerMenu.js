@@ -1,12 +1,12 @@
 import bgScrollFixed from '../function/bgScrollFixed'
 
 export default class DrawerMenu {
-  constructor(_obj) {
-    this.elmDrawer = document.querySelector(_obj.drawer) || false
-    this.elmDrawerOpenBtn = document.querySelector(_obj.drawerOpenBtn) || false
-    this.elmDrawerCloseBtn = document.querySelector(_obj.drawerCloseBtn) || false
-    this.elmDrawerBg = document.querySelector(_obj.drawerBg) || false
-    this.attrToggle = _obj.attrToggle
+  constructor(_parm) {
+    this.elmDrawer = document.querySelector(_parm.drawer) || false
+    this.elmDrawerOpenBtn = document.querySelector(_parm.drawerOpenBtn) || false
+    this.elmDrawerCloseBtn = document.querySelector(_parm.drawerCloseBtn) || false
+    this.elmDrawerBg = document.querySelector(_parm.drawerBg) || false
+    this.attrToggle = _parm.attrToggle
     this.openFlag = false
   }
   open() {
