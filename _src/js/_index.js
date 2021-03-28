@@ -1,3 +1,5 @@
+// import adjustViewport from './function/adjustViewport'
+
 import DrawerMenu from './module/DrawerMenu'
 
 const init = () => {
@@ -14,5 +16,6 @@ const init = () => {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  // adjustViewport()
   init()
 })

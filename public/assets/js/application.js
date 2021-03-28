@@ -96,6 +96,7 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _module_DrawerMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module/DrawerMenu */ "./_src/js/module/DrawerMenu.js");
+// import adjustViewport from './function/adjustViewport'
 
 
 var init = function init() {
@@ -112,6 +113,7 @@ var init = function init() {
 };
 
 window.addEventListener('DOMContentLoaded', function () {
+  // adjustViewport()
   init();
 });
 
