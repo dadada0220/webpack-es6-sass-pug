@@ -128,10 +128,11 @@ var init = function init() {
     // const fields = ["username", "email", "password", "password_confirmation"]
     // const validator = new FormValidator(form, fields)
     // validator.initialize()
-    var form = document.querySelector('.form');
-    var fields = ["username", "email", "password", "password_confirmation"];
-    var validator = new _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__["default"](form, fields);
-    validator.initialize();
+    var formValidator = new _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      form: '#js-form',
+      targetInputs: '#js-form input[data-required]'
+    });
+    formValidator.init();
   })();
 };
 
@@ -312,6 +313,18 @@ var DrawerMenu = /*#__PURE__*/function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return FormValidator; });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -319,105 +332,77 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var FormValidator = /*#__PURE__*/function () {
-  function FormValidator(form, fields) {
+  function FormValidator(_parm) {
     _classCallCheck(this, FormValidator);
 
-    this.form = form;
-    this.fields = fields;
+    this.elmForm = document.querySelector(_parm.form) || false;
+    this.elmTargetInputs = _toConsumableArray(document.querySelectorAll(_parm.targetInputs)) || _toConsumableArray(document.querySelectorAll("".concat(_parm.form, " input[data-required]")));
+    this.classErrorInput = _parm.classErrorInput || '__error';
+    this.attrErrorMessage = _parm.attrErrorMessage || 'data-js-error-message';
+    this.defaultErrorMessage = _parm.defaultErrorMessage || '入力してください';
+    this.errorFlag = false;
   }
 
   _createClass(FormValidator, [{
-    key: "initialize",
-    value: function initialize() {
-      this.validateOnEntry();
-      this.validateOnSubmit();
+    key: "validate",
+    value: function validate(_elmInput) {
+      var value = _elmInput.value;
+
+      var inputName = _elmInput.getAttribute('name');
+
+      var inputPattern = _elmInput.getAttribute('pattern') || false;
+      var inputTitle = _elmInput.getAttribute('title') || false;
+      var errorFlag = false;
+      var errorCount = 0;
+
+      var checkUndefined = function checkUndefined() {
+        if (value !== '') return true;
+      };
+
+      var checkPattern = function checkPattern() {
+        if (!inputPattern) return;
+        if (value.match(inputPattern)) return true;
+      };
+
+      var checkEmail = function checkEmail() {
+        if (!_elmInput.getAttribute('name') === 'email') return;
+        if (value.match(/^[a-zA-Z0-9-_\.]+@[a-zA-Z0-9-_\.]+$/)) return true;
+      };
+
+      var checkTel = function checkTel() {
+        if (!_elmInput.getAttribute('name') === 'email') return;
+        if (value.match(/^0\d{9,10}$/)) return true;
+      };
     }
   }, {
-    key: "validateOnSubmit",
-    value: function validateOnSubmit() {
-      var self = this;
-      this.form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        self.fields.forEach(function (field) {
-          var input = document.querySelector("#".concat(field));
-          self.validateFields(input);
+    key: "addEvent",
+    value: function addEvent() {
+      var _this = this;
+
+      this.elmForm.addEventListener('submit', function (_ev) {
+        _ev.preventDefault();
+
+        _this.elmTargetInputs.forEach(function (_elmTargetInput) {
+          _this.validate(_elmTargetInput);
         });
+
+        if (_this.errorFlag) {
+          _this.elmForm.submit();
+        }
       });
     }
   }, {
-    key: "validateOnEntry",
-    value: function validateOnEntry() {
-      var self = this;
-      this.fields.forEach(function (field) {
-        var input = document.querySelector("#".concat(field));
-        input.addEventListener('input', function (event) {
-          self.validateFields(input);
-        });
+    key: "init",
+    value: function init() {
+      var _this2 = this;
+
+      console.log(this.elmForm);
+      console.log(this.elmTargetInputs);
+      if (!this.elmForm) return;
+      this.elmTargetInputs.forEach(function (_elmTargetInput) {
+        _this2.validate(_elmTargetInput);
       });
-    }
-  }, {
-    key: "validateFields",
-    value: function validateFields(field) {
-      // Check presence of values
-      if (field.value.trim() === "") {
-        this.setStatus(field, "".concat(field.previousElementSibling.innerText, " cannot be blank"), "error");
-      } else {
-        this.setStatus(field, null, "success");
-      } // check for a valid email address
-
-
-      if (field.type === "email") {
-        var re = /\S+@\S+\.\S+/;
-
-        if (re.test(field.value)) {
-          this.setStatus(field, null, "success");
-        } else {
-          this.setStatus(field, "Please enter valid email address", "error");
-        }
-      } // Password confirmation edge case
-
-
-      if (field.id === "password_confirmation") {
-        var passwordField = this.form.querySelector('#password');
-
-        if (field.value.trim() == "") {
-          this.setStatus(field, "Password confirmation required", "error");
-        } else if (field.value != passwordField.value) {
-          this.setStatus(field, "Password does not match", "error");
-        } else {
-          this.setStatus(field, null, "success");
-        }
-      }
-    }
-  }, {
-    key: "setStatus",
-    value: function setStatus(field, message, status) {
-      var successIcon = field.parentElement.querySelector('.icon-success');
-      var errorIcon = field.parentElement.querySelector('.icon-error');
-      var errorMessage = field.parentElement.querySelector('.error-message');
-
-      if (status === "success") {
-        if (errorIcon) {
-          errorIcon.classList.add('hidden');
-        }
-
-        if (errorMessage) {
-          errorMessage.innerText = "";
-        }
-
-        successIcon.classList.remove('hidden');
-        field.classList.remove('input-error');
-      }
-
-      if (status === "error") {
-        if (successIcon) {
-          successIcon.classList.add('hidden');
-        }
-
-        field.parentElement.querySelector('.error-message').innerText = message;
-        errorIcon.classList.remove('hidden');
-        field.classList.add('input-error');
-      }
+      this.addEvent();
     }
   }]);
 

@@ -29,10 +29,11 @@ const init = () => {
     // const fields = ["username", "email", "password", "password_confirmation"]
     // const validator = new FormValidator(form, fields)
     // validator.initialize()
-    const form = document.querySelector('.form')
-    const fields = ["username", "email", "password", "password_confirmation"]
-    const validator = new FormValidator(form, fields)
-    validator.initialize()
+    const formValidator = new FormValidator({
+      form: '#js-form',
+      targetInputs: '#js-form input[data-required]'
+    })
+    formValidator.init()
   })();
 }
 

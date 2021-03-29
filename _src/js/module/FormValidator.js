@@ -1,87 +1,56 @@
 export default class FormValidator {
-  constructor(form, fields) {
-    this.form = form
-    this.fields = fields
+  constructor(_parm) {
+    this.elmForm = document.querySelector(_parm.form) || false
+    this.elmTargetInputs = [...document.querySelectorAll(_parm.targetInputs)] || [...document.querySelectorAll(`${_parm.form} input[data-required]`)]
+    this.classErrorInput = _parm.classErrorInput || '__error'
+    this.attrErrorMessage = _parm.attrErrorMessage || 'data-js-error-message'
+    this.defaultErrorMessage = _parm.defaultErrorMessage || '入力してください'
+    this.errorFlag = false
   }
 
-  initialize() {
-    this.validateOnEntry()
-    this.validateOnSubmit()
+  validate(_elmInput) {
+    const value = _elmInput.value
+    const inputName = _elmInput.getAttribute('name')
+    const inputPattern = _elmInput.getAttribute('pattern') || false
+    const inputTitle = _elmInput.getAttribute('title') || false
+    const errorFlag = false
+    const errorCount = 0
+    const checkUndefined = () => {
+      if (value !== '') return true;
+    }
+    const checkPattern = () => {
+      if (!inputPattern) return;
+      if (value.match(inputPattern)) return true;
+    }
+    const checkEmail = () => {
+      if (!_elmInput.getAttribute('name') === 'email') return;
+      if (value.match(/^[a-zA-Z0-9-_\.]+@[a-zA-Z0-9-_\.]+$/)) return true;
+    }
+    const checkTel = () => {
+      if (!_elmInput.getAttribute('name') === 'email') return;
+      if (value.match(/^0\d{9,10}$/)) return true;
+    }
   }
 
-  validateOnSubmit() {
-    let self = this
-
-    this.form.addEventListener('submit', e => {
-        e.preventDefault()
-        self.fields.forEach(field => {
-        const input = document.querySelector(`#${field}`)
-        self.validateFields(input)
+  addEvent() {
+    this.elmForm.addEventListener('submit', (_ev) => {
+      _ev.preventDefault()
+      this.elmTargetInputs.forEach(_elmTargetInput => {
+        this.validate(_elmTargetInput)
       })
+      if (this.errorFlag) {
+        this.elmForm.submit()
+      }
     })
   }
 
-  validateOnEntry() {
-    let self = this
-    this.fields.forEach(field => {
-      const input = document.querySelector(`#${field}`)
-
-      input.addEventListener('input', event => {
-        self.validateFields(input)
-      })
+  init() {
+    console.log(this.elmForm)
+    console.log(this.elmTargetInputs)
+    if (!this.elmForm) return;
+    this.elmTargetInputs.forEach(_elmTargetInput => {
+      this.validate(_elmTargetInput)
     })
-  }
-
-  validateFields(field) {
-
-    // Check presence of values
-    if (field.value.trim() === "") {
-      this.setStatus(field, `${field.previousElementSibling.innerText} cannot be blank`, "error")
-    } else {
-      this.setStatus(field, null, "success")
-    }
-
-    // check for a valid email address
-    if (field.type === "email") {
-      const re = /\S+@\S+\.\S+/
-      if (re.test(field.value)) {
-        this.setStatus(field, null, "success")
-      } else {
-        this.setStatus(field, "Please enter valid email address", "error")
-      }
-    }
-
-    // Password confirmation edge case
-    if (field.id === "password_confirmation") {
-      const passwordField = this.form.querySelector('#password')
-
-      if (field.value.trim() == "") {
-        this.setStatus(field, "Password confirmation required", "error")
-      } else if (field.value != passwordField.value) {
-        this.setStatus(field, "Password does not match", "error")
-      } else {
-        this.setStatus(field, null, "success")
-      }
-    }
-  }
-
-  setStatus(field, message, status) {
-    const successIcon = field.parentElement.querySelector('.icon-success')
-    const errorIcon = field.parentElement.querySelector('.icon-error')
-    const errorMessage = field.parentElement.querySelector('.error-message')
-
-    if (status === "success") {
-      if (errorIcon) { errorIcon.classList.add('hidden') }
-      if (errorMessage) { errorMessage.innerText = "" }
-      successIcon.classList.remove('hidden')
-      field.classList.remove('input-error')
-    }
-
-    if (status === "error") {
-      if (successIcon) { successIcon.classList.add('hidden') }
-      field.parentElement.querySelector('.error-message').innerText = message
-      errorIcon.classList.remove('hidden')
-      field.classList.add('input-error')
-    }
+    this.addEvent()
   }
 }
