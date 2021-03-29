@@ -133,3 +133,12 @@
 =underline-text($color: #ff0, $height: 65%)
   display: inline
   background: linear-gradient(transparent $height, $color 0%)
+
+
+
+// # ブラウザハック
+// #################################################
+
+=ie()
+  @media all and (-ms-high-contrast:none\0)
+    @content
