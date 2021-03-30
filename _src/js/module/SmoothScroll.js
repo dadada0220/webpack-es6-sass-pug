@@ -1,8 +1,11 @@
 /**
  * スムーススクロールを実行するクラス
+ * @see https://www.to-r.net/media/smooth_scrolling_2019/
+ *
  * スクロール位置を調節可能（固定ヘッダーの場合、その高さ分、位置をズラすなど）
  */
 
+// モダンブラウザ用ポリフィル
 import smoothscroll from 'smoothscroll-polyfill';
 
 export default class SmoothScroll {
