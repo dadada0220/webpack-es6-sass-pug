@@ -34,6 +34,19 @@
     &__input
       width: 100%
       padding-left: 40px
+      input,
+      textarea,
+      select
+        &.__error
+          background-color: rgba($c--warning, .1)
+          border: solid 1px $c--warning
+        &.__secure
+          background-color: rgba($c--safe, .05)
+          border: solid 1px $c--safe
+    &__error-message
+      color: $c--warning
+      font-size: 12px
+      margin-top: 4px
     &__caption
       color: $c--gray-l
       font-size: 12px

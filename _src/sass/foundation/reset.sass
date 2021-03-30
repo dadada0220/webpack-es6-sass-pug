@@ -175,6 +175,7 @@ ul,
 ol
   list-style-type: none
 
+//
 // # Add reset style
 // #################################################
 
@@ -199,7 +200,6 @@ h6
 a
   color: inherit
   width: 100%
-  height: 100%
   text-decoration: none
   &:hover
     color: inherit
@@ -215,8 +215,6 @@ address
 sup
   vertical-align: super
   font-size: smaller
-
-// ↓↓↓ Form tags ↓↓↓
 
 input,
 button,
@@ -264,37 +262,31 @@ select
     color: rgba($c--black, .7)
     border: none
     border-radius: 0
-  &.__error
-    background-color: rgba($c--warning, .1)
-    border: solid 1px $c--warning
-  &.__secure
-    background-color: rgba($c--safe, .05)
-    border: solid 1px $c--safe
-
-.__error-message
-  color: $c--warning
-  font-size: 12px
-  margin-top: 4px
 
 textarea
   min-height: 100px
+
+select
+  // IEの矢印を非表示
+  &::-ms-expand
+    display: none
 
 button
   cursor: pointer
 
 %__input_radio_check_hide
-  // display: none で消すのはアクセシビリティ的によろしくない
+  // `display: none`で消すのはアクセシビリティ的によろしくない
   // @see https://github.com/mike-engel/a11y-css-reset
   position: absolute
   white-space: nowrap
   width: 1px
   height: 1px
-  overflow: hidden
   border: 0
+  margin: -1px
   padding: 0
+  overflow: hidden
   clip: rect(0 0 0 0)
   clip-path: inset(50%)
-  margin: -1px
 
 input[type="radio"]
   $parent_radio: &
