@@ -152,7 +152,6 @@ __webpack_require__.r(__webpack_exports__);
  * 背景を固定する関数
  * モーダルやドロワーメニューが開いている時に使用する
  * @param {Boolean} _isFixed - 固定: true, 解除: false
- * @return undefined
  */
 /* harmony default export */ __webpack_exports__["default"] = (function (_isFixed) {
   /**
@@ -176,15 +175,15 @@ __webpack_require__.r(__webpack_exports__);
     return scrollingElement.scrollTop;
   };
   /**
-    * 適用するスクロール位置を定義
-    */
+   * 適用するスクロール位置を定義
+   */
 
 
   var scrollY = _isFixed ? getScrollTop() * -1 : parseInt(document.body.style.top || '0') * -1;
   /**
-    * bodyに背景を{固定, 解除}するCSS適用
-    * （背景固定時に画面のがくつきを防ぐために、スクロールバーの横幅の値を`padding-right`にセットしている）
-    */
+   * bodyに背景を{固定, 解除}するCSS適用
+   * （背景固定時に画面のがくつきを防ぐために、スクロールバーの横幅の値を`padding-right`にセットしている）
+   */
 
   if (_isFixed) {
     Object.assign(document.body.style, {
@@ -200,11 +199,12 @@ __webpack_require__.r(__webpack_exports__);
     document.body.style = '';
   }
   /**
-    * 固定解除時にスクロール位置を戻す
-    */
+   * 固定解除時にスクロール位置を戻す
+   */
 
 
   if (!_isFixed) window.scrollTo(0, scrollY);
+  return;
 });
 
 /***/ }),
@@ -226,6 +226,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ * ハンバーガーメニューなどのドロワーの表示を切り替えるクラス
+ */
 
 
 var DrawerMenu = /*#__PURE__*/function () {
@@ -327,6 +330,14 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ * フォームのバリデーションを実行するクラス
+ * `elmForm`, `elmTargetInputs`は必須
+ *
+ * 場合によっては、以下ライブラリでバリデーションするでも良いかも
+ * 公式: https://imbrn.github.io/v8n/#what-s-v8n
+ * 日本語解説記事: https://co.bsnws.net/article/182
+ */
 var FormValidator = /*#__PURE__*/function () {
   function FormValidator(_parm) {
     _classCallCheck(this, FormValidator);
@@ -527,6 +538,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ * スムーススクロールを実行するクラス
+ * スクロール位置を調節可能（固定ヘッダーの場合、その高さ分、位置をズラすなど）
+ */
 
 
 var SmoothScroll = /*#__PURE__*/function () {

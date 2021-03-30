@@ -1,3 +1,7 @@
+/**
+ * ハンバーガーメニューなどのドロワーの表示を切り替えるクラス
+ */
+
 import bgScrollFixed from '../function/bgScrollFixed';
 
 export default class DrawerMenu {

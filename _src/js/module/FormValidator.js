@@ -1,3 +1,11 @@
+/**
+ * フォームのバリデーションを実行するクラス
+ * `elmForm`, `elmTargetInputs`は必須
+ *
+ * 場合によっては、以下ライブラリでバリデーションするでも良いかも
+ * 公式: https://imbrn.github.io/v8n/#what-s-v8n
+ * 日本語解説記事: https://co.bsnws.net/article/182
+ */
 export default class FormValidator {
   constructor(_parm) {
     this.elmForm = document.querySelector(_parm.form) || false;
