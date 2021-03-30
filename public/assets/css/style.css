@@ -584,7 +584,7 @@ body {
   max-width: 600px;
   margin: auto;
 }
-.c-form-inputs__group {
+.c-form-inputs__group, .c-form-inputs__group--checkbox {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -592,7 +592,7 @@ body {
       -ms-flex-align: start;
           align-items: flex-start;
 }
-.c-form-inputs__group:not(:first-of-type) {
+.c-form-inputs__group:not(:first-of-type), .c-form-inputs__group--checkbox:not(:first-of-type) {
   margin-top: 40px;
 }
 .c-form-inputs__label {
@@ -608,7 +608,6 @@ body {
   font-size: 15px;
   width: 100%;
   max-width: 200px;
-  padding-top: 8px;
 }
 .c-form-inputs__label .__required,
 .c-form-inputs__label .__any {

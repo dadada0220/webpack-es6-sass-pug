@@ -7,10 +7,13 @@
   margin: auto
   &-inputs
     &__group
+      $parent_inputs_group: &
       display: flex
       align-items: flex-start
       &:not(:first-of-type)
         margin-top: 40px
+      &--checkbox
+        @extend #{$parent_inputs_group}
     &__label
       flex: 0 0 auto
       display: flex
@@ -18,7 +21,6 @@
       font-size: 15px
       width: 100%
       max-width: 200px
-      padding-top: 8px
       .__required,
       .__any
         display: inline-block
