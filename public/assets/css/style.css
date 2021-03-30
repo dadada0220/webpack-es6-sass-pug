@@ -299,6 +299,18 @@ select[readonly] {
   border: none;
   border-radius: 0;
 }
+input.__error,
+textarea.__error,
+select.__error {
+  background-color: rgba(230, 52, 68, 0.1);
+  border: solid 1px #e63444;
+}
+input.__secure,
+textarea.__secure,
+select.__secure {
+  background-color: rgba(31, 218, 80, 0.05);
+  border: solid 1px #1fda50;
+}
 
 textarea {
   min-height: 100px;

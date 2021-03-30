@@ -13,7 +13,6 @@ input[type="color"]::-webkit-color-swatch
 input[type="color"]::-webkit-color-swatch-wrapper
   padding: 0
 
-
 // html5doctor.com Reset Stylesheet
 // v1.6.1
 // Last Updated: 2010-09-17
@@ -264,6 +263,12 @@ select
     color: rgba($c--black, .7)
     border: none
     border-radius: 0
+  &.__error
+    background-color: rgba($c--warning, .1)
+    border: solid 1px $c--warning
+  &.__secure
+    background-color: rgba($c--safe, .05)
+    border: solid 1px $c--safe
 
 textarea
   min-height: 100px

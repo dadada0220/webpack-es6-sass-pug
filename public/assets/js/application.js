@@ -130,7 +130,7 @@ var init = function init() {
     // validator.initialize()
     var formValidator = new _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__["default"]({
       form: '#js-form',
-      targetInputs: '#js-form input[data-required]'
+      targetInputs: 'input[required]'
     });
     formValidator.init();
   })();
@@ -336,72 +336,162 @@ var FormValidator = /*#__PURE__*/function () {
     _classCallCheck(this, FormValidator);
 
     this.elmForm = document.querySelector(_parm.form) || false;
-    this.elmTargetInputs = _toConsumableArray(document.querySelectorAll(_parm.targetInputs)) || _toConsumableArray(document.querySelectorAll("".concat(_parm.form, " input[data-required]")));
+    this.elmTargetInputs = _toConsumableArray(this.elmForm.querySelectorAll(_parm.targetInputs));
     this.classErrorInput = _parm.classErrorInput || '__error';
+    this.classSecureInput = _parm.classSecureInput || '__secure';
     this.attrErrorMessage = _parm.attrErrorMessage || 'data-js-error-message';
-    this.defaultErrorMessage = _parm.defaultErrorMessage || '入力してください';
-    this.errorFlag = false;
+    this.defaultErrorMessage = _parm.defaultErrorMessage || '必須項目を入力してください';
+    this.inputStatuses = this.elmTargetInputs.map(function (_value, _index) {
+      var result = [];
+      result['name'] = _value.getAttribute('name');
+      result['isError'] = true;
+      return result;
+    });
   }
+  /**
+   * input要素に付与されている`required`と`pattern`でバリデーションチェックを行う
+   * エラーなら`true`が返る
+   * @param {*} _elmInput バリデーション対象のinput要素
+   * @returns true;
+   */
+
 
   _createClass(FormValidator, [{
-    key: "validate",
-    value: function validate(_elmInput) {
+    key: "errorCheck",
+    value: function errorCheck(_elmInput) {
+      var patternValidate = _elmInput.getAttribute('pattern') || false;
+
+      if (patternValidate) {
+        return !_elmInput.validity.patternMismatch && _elmInput.value.length ? false : true;
+      }
+
+      return _elmInput.validity.valueMissing;
+    }
+    /**
+     * input要素のエラーメッセージ要素のテキストを描画
+     * @param {*} _elmInput バリデーション対象のinput要素
+     */
+
+  }, {
+    key: "showErrorMessage",
+    value: function showErrorMessage(_elmInput) {
       var value = _elmInput.value;
 
-      var inputName = _elmInput.getAttribute('name');
+      var name = _elmInput.getAttribute('name');
 
-      var inputPattern = _elmInput.getAttribute('pattern') || false;
-      var inputTitle = _elmInput.getAttribute('title') || false;
-      var errorFlag = false;
-      var errorCount = 0;
+      var patternErrorMessage = _elmInput.getAttribute('title') || false;
+      var errorMessage = '';
 
-      var checkUndefined = function checkUndefined() {
-        if (value !== '') return true;
+      if (patternErrorMessage) {
+        errorMessage = value.length ? patternErrorMessage : this.defaultErrorMessage;
+      } else {
+        errorMessage = this.defaultErrorMessage;
+      }
+
+      this.elmForm.querySelector("[".concat(this.attrErrorMessage, "=\"").concat(name, "\"]")).textContent = errorMessage;
+      return;
+    }
+    /**
+     * input要素のエラーをリセット
+     * @param {*} _elmInput バリデーション対象のinput要素
+     */
+
+  }, {
+    key: "errorReset",
+    value: function errorReset(_elmInput) {
+      _elmInput.classList.remove(this.classErrorInput);
+
+      _elmInput.classList.remove(this.classSecureInput);
+
+      this.elmForm.querySelector("[".concat(this.attrErrorMessage, "=\"").concat(_elmInput.getAttribute('name'), "\"]")).textContent = '';
+      return;
+    }
+    /**
+     * input要素に対してバリデーションチェックやエラーメッセージの描画など、バリデーションに関する関数を全部実行する
+     * @param {*} _elmInput バリデーション対象のinput要素
+     */
+
+  }, {
+    key: "validate",
+    value: function validate(_elmInput) {
+      var _this = this;
+
+      // エラーリセット
+      this.errorReset(_elmInput); // バリデーションチェックやエラーメッセージの描画などを実行
+
+      var isError = this.errorCheck(_elmInput);
+
+      var changeInputStatusArray = function changeInputStatusArray(_isErrorValue) {
+        var targetInputStatus = _this.inputStatuses.find(function (_item) {
+          return _item.name === _elmInput.getAttribute('name');
+        });
+
+        targetInputStatus['isError'] = _isErrorValue;
       };
 
-      var checkPattern = function checkPattern() {
-        if (!inputPattern) return;
-        if (value.match(inputPattern)) return true;
-      };
+      if (isError) {
+        _elmInput.classList.add(this.classErrorInput);
 
-      var checkEmail = function checkEmail() {
-        if (!_elmInput.getAttribute('name') === 'email') return;
-        if (value.match(/^[a-zA-Z0-9-_\.]+@[a-zA-Z0-9-_\.]+$/)) return true;
-      };
+        this.showErrorMessage(_elmInput);
+        changeInputStatusArray(true);
+      } else {
+        _elmInput.classList.add(this.classSecureInput);
 
-      var checkTel = function checkTel() {
-        if (!_elmInput.getAttribute('name') === 'email') return;
-        if (value.match(/^0\d{9,10}$/)) return true;
-      };
+        changeInputStatusArray(false);
+      }
+
+      return;
+    }
+    /**
+     * input要素が一つでもバリデーションに引っかかってたら`true`を返す
+     * `true`: バリデーションエラー, `false`: エラー無し
+     * @return Boolean
+     */
+
+  }, {
+    key: "getIsError",
+    value: function getIsError() {
+      return this.inputStatuses.every(function (_item) {
+        return _item['isError'] === false;
+      }) ? false : true;
     }
   }, {
     key: "addEvent",
     value: function addEvent() {
-      var _this = this;
+      var _this2 = this;
+
+      this.elmTargetInputs.forEach(function (_elmTargetInput) {
+        /**
+         * input フォーカスアウト時
+         */
+        _elmTargetInput.addEventListener('blur', function (_ev) {
+          _this2.validate(_elmTargetInput);
+        });
+        /**
+         * input エラー時
+         */
+
+
+        _elmTargetInput.addEventListener('invalid', function (_ev) {
+          _this2.validate(_elmTargetInput);
+        });
+      });
+      /**
+       * 送信時
+       */
 
       this.elmForm.addEventListener('submit', function (_ev) {
         _ev.preventDefault();
 
-        _this.elmTargetInputs.forEach(function (_elmTargetInput) {
-          _this.validate(_elmTargetInput);
-        });
-
-        if (_this.errorFlag) {
-          _this.elmForm.submit();
+        if (!_this2.getIsError()) {
+          console.log('Submit!'); // this.elmForm.submit();
         }
       });
     }
   }, {
     key: "init",
     value: function init() {
-      var _this2 = this;
-
-      console.log(this.elmForm);
-      console.log(this.elmTargetInputs);
       if (!this.elmForm) return;
-      this.elmTargetInputs.forEach(function (_elmTargetInput) {
-        _this2.validate(_elmTargetInput);
-      });
       this.addEvent();
     }
   }]);

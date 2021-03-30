@@ -1,8 +1,8 @@
 // import adjustViewport from './function/adjustViewport'
 
-import DrawerMenu from './module/DrawerMenu'
-import FormValidator from './module/FormValidator'
-import SmoothScroll from './module/SmoothScroll'
+import DrawerMenu from './module/DrawerMenu';
+import FormValidator from './module/FormValidator';
+import SmoothScroll from './module/SmoothScroll';
 
 const init = () => {
   (() => {
@@ -12,16 +12,16 @@ const init = () => {
       drawerCloseBtn: '#js-drawer-close-btn',
       drawerBg: '#js-drawer-menu-bg',
       attrToggle: 'data-active',
-    })
-    headerDrawerMenu.init()
+    });
+    headerDrawerMenu.init();
   })();
 
   (() => {
     const smoothScroll = new SmoothScroll({
       targets: 'a[href^="#"]',
       fixHeader: '#js-header',
-    })
-    smoothScroll.init()
+    });
+    smoothScroll.init();
   })();
 
   (() => {
@@ -31,13 +31,13 @@ const init = () => {
     // validator.initialize()
     const formValidator = new FormValidator({
       form: '#js-form',
-      targetInputs: '#js-form input[data-required]'
-    })
-    formValidator.init()
+      targetInputs: 'input[required]',
+    });
+    formValidator.init();
   })();
-}
+};
 
 window.addEventListener('DOMContentLoaded', () => {
   // adjustViewport()
-  init()
-})
+  init();
+});
