@@ -95,22 +95,22 @@ export default class FormValidator {
   }
 
   addEvent() {
+    /**
+     * Input
+     */
     this.elmTargetInputs.forEach((_elmTargetInput) => {
-      /**
-       * input フォーカスアウト時
-       */
+      // フォーカスアウト時
       _elmTargetInput.addEventListener('blur', (_ev) => {
         this.validate(_elmTargetInput);
       });
-      /**
-       * input エラー時
-       */
+      // エラー時
       _elmTargetInput.addEventListener('invalid', (_ev) => {
         this.validate(_elmTargetInput);
       });
     });
+
     /**
-     * 送信時
+     * Form
      */
     this.elmForm.addEventListener('submit', (_ev) => {
       _ev.preventDefault();

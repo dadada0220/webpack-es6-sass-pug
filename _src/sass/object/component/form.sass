@@ -1,0 +1,44 @@
+@charset "utf-8"
+
+@use "../../foundation/global" as *
+
+.c-form
+  max-width: 600px
+  margin: auto
+  &-inputs
+    margin-top: 40px
+    &__group
+      display: flex
+      align-items: flex-start
+      &:not(:first-of-type)
+        margin-top: 40px
+    &__label
+      flex: 0 0 auto
+      display: flex
+      align-items: center
+      font-size: 15px
+      width: 100%
+      max-width: 200px
+      padding-top: 8px
+      .__required,
+      .__any
+        display: inline-block
+        font-size: 12px
+        border-radius: 2px
+        margin-left: 8px
+        padding: 2px 6px
+      .__required
+        color: $c--white
+        background-color: $c--warning
+      .__any
+        background-color: $c--gray-s
+    &__input
+      width: 100%
+      padding-left: 40px
+    &__caption
+      color: $c--gray-l
+      font-size: 12px
+      margin-top: 4px
+  &-submit
+    max-width: 200px
+    margin: 40px auto 0

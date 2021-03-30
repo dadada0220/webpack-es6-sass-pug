@@ -287,10 +287,11 @@ select::-webkit-inner-spin-button {
 input,
 textarea,
 select {
+  line-height: 1.5;
   background-color: #fff;
   border: solid 1px #d5d5d5;
   border-radius: 3px;
-  padding: 6px 12px;
+  padding: 10px 12px;
 }
 input[readonly],
 textarea[readonly],
@@ -310,6 +311,12 @@ textarea.__secure,
 select.__secure {
   background-color: rgba(31, 218, 80, 0.05);
   border: solid 1px #1fda50;
+}
+
+.__error-message {
+  color: #e63444;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 textarea {
@@ -426,6 +433,9 @@ select {
   color: #333;
   font-size: 16px;
   font-family: "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+}
+
+body {
   line-height: 1.7;
 }
 
@@ -545,6 +555,68 @@ select {
 .c-section {
   padding-top: 80px;
   padding-bottom: 80px;
+}
+
+.c-form {
+  max-width: 600px;
+  margin: auto;
+}
+.c-form-inputs {
+  margin-top: 40px;
+}
+.c-form-inputs__group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.c-form-inputs__group:not(:first-of-type) {
+  margin-top: 40px;
+}
+.c-form-inputs__label {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 15px;
+  width: 100%;
+  max-width: 200px;
+  padding-top: 8px;
+}
+.c-form-inputs__label .__required,
+.c-form-inputs__label .__any {
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 2px;
+  margin-left: 8px;
+  padding: 2px 6px;
+}
+.c-form-inputs__label .__required {
+  color: #fff;
+  background-color: #e63444;
+}
+.c-form-inputs__label .__any {
+  background-color: #f5f5f5;
+}
+.c-form-inputs__input {
+  width: 100%;
+  padding-left: 40px;
+}
+.c-form-inputs__caption {
+  color: #939597;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.c-form-submit {
+  max-width: 200px;
+  margin: 40px auto 0;
 }
 
 .p-header {

@@ -255,10 +255,11 @@ select
 input,
 textarea,
 select
+  line-height: 1.5
   background-color: $c--white
   border: solid 1px $c--gray-m
   border-radius: 3px
-  padding: 6px 12px
+  padding: 10px 12px
   &[readonly]
     color: rgba($c--black, .7)
     border: none
@@ -270,6 +271,11 @@ select
     background-color: rgba($c--safe, .05)
     border: solid 1px $c--safe
 
+.__error-message
+  color: $c--warning
+  font-size: 12px
+  margin-top: 4px
+
 textarea
   min-height: 100px
 
@@ -278,7 +284,7 @@ button
 
 %__input_radio_check_hide
   // display: none で消すのはアクセシビリティ的によろしくない
-  // https://github.com/mike-engel/a11y-css-reset
+  // @see https://github.com/mike-engel/a11y-css-reset
   position: absolute
   white-space: nowrap
   width: 1px

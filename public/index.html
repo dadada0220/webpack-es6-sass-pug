@@ -69,28 +69,39 @@
               <div class="c-section__inner p-test__inner l-inner">
                 <h2 class="c-section__head p-test__head">Form</h2>
                 <div class="c-section__content p-test__content">
-                  <form id="js-form">
-                    <div>
-                      <label>氏名</label>
-                      <input type="text" name="name" required>
-                      <div class="error-message" data-js-error-message="name"></div>
+                  <form class="c-form" id="js-form">
+                    <div class="c-form-inputs">
+                      <div class="c-form-inputs__group">
+                        <label class="c-form-inputs__label">氏名<span class="__required">必須</span></label>
+                        <div class="c-form-inputs__input">
+                          <input type="text" name="name" required placeholder="例）氏名 太郎">
+                          <div class="__error-message" data-js-error-message="name"></div>
+                        </div>
+                      </div>
+                      <div class="c-form-inputs__group">
+                        <label class="c-form-inputs__label">メールアドレス<span class="__required">必須</span></label>
+                        <div class="c-form-inputs__input">
+                          <input type="email" name="email" required pattern="^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+$" title="メールアドレスの形式で入力してください" placeholder="例）example@ex.com">
+                          <div class="__error-message" data-js-error-message="email"></div>
+                        </div>
+                      </div>
+                      <div class="c-form-inputs__group">
+                        <label class="c-form-inputs__label">電話番号<span class="__required">必須</span></label>
+                        <div class="c-form-inputs__input">
+                          <input type="tel" name="tel" required pattern="^0[0-9]{9,10}$" title="電話番号の形式で入力してください" placeholder="例）09012345678">
+                          <div class="__error-message" data-js-error-message="tel"></div>
+                          <div class="c-form-inputs__caption"><small>ハイフン無しで入力してください</small></div>
+                        </div>
+                      </div>
+                      <div class="c-form-inputs__group">
+                        <label class="c-form-inputs__label">任意項目<span class="__any">任意</span></label>
+                        <div class="c-form-inputs__input">
+                          <input type="text" name="any">
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <label>メールアドレス</label>
-                      <input type="email" name="email" required pattern="^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+$" title="メールアドレスの形式で入力してください">
-                      <div class="error-message" data-js-error-message="email"></div>
-                    </div>
-                    <div>
-                      <label>電話番号</label>
-                      <input type="tel" name="tel" required pattern="^0[0-9]{9,10}$" title="電話番号の形式で入力してください">
-                      <div class="error-message" data-js-error-message="tel"></div>
-                    </div>
-                    <div>
-                      <label>任意項目</label>
-                      <input type="text" name="nini">
-                    </div>
-                    <div>
-                      <button>送信</button>
+                    <div class="c-form-submit">
+                      <button type="submit">送信</button>
                     </div>
                   </form>
                 </div>

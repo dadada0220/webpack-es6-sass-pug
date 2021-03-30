@@ -124,10 +124,6 @@ var init = function init() {
   })();
 
   (function () {
-    // const form = document.querySelector('.form')
-    // const fields = ["username", "email", "password", "password_confirmation"]
-    // const validator = new FormValidator(form, fields)
-    // validator.initialize()
     var formValidator = new _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__["default"]({
       form: '#js-form',
       targetInputs: 'input[required]'
@@ -460,16 +456,14 @@ var FormValidator = /*#__PURE__*/function () {
     value: function addEvent() {
       var _this2 = this;
 
+      /**
+       * Input
+       */
       this.elmTargetInputs.forEach(function (_elmTargetInput) {
-        /**
-         * input フォーカスアウト時
-         */
+        // フォーカスアウト時
         _elmTargetInput.addEventListener('blur', function (_ev) {
           _this2.validate(_elmTargetInput);
-        });
-        /**
-         * input エラー時
-         */
+        }); // エラー時
 
 
         _elmTargetInput.addEventListener('invalid', function (_ev) {
@@ -477,7 +471,7 @@ var FormValidator = /*#__PURE__*/function () {
         });
       });
       /**
-       * 送信時
+       * Form
        */
 
       this.elmForm.addEventListener('submit', function (_ev) {
