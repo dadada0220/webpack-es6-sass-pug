@@ -1,0 +1,23 @@
+@charset "utf-8"
+
+@use "../../foundation/global" as *
+
+.c-btn
+  color: $c--white
+  background-color: $c--primary
+  border-radius: 2px
+  padding: 16px 20px
+  position: relative
+  transition: opacity .2s
+  &:hover
+    opacity: 0.7
+    transition: opacity .2s
+  &::before
+    content: ""
+    display: block
+    +triangle_border(right, 2px, $c--white, 6px)
+    position: absolute
+    top: 0
+    bottom: 0
+    right: 12px
+    margin: auto
