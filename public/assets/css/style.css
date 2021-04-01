@@ -592,6 +592,15 @@ body {
   max-width: 600px;
   margin: auto;
 }
+.c-form__error-message {
+  color: #e63444;
+  font-size: 13px;
+  text-align: center;
+  background-color: rgba(230, 52, 68, 0.1);
+  border: solid 1px #e63444;
+  border-radius: 2px;
+  padding: 12px 12px;
+}
 .c-form-inputs__group, .c-form-inputs__group--radio, .c-form-inputs__group--checkbox {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -602,6 +611,11 @@ body {
 }
 .c-form-inputs__group:not(:first-of-type), .c-form-inputs__group--radio:not(:first-of-type), .c-form-inputs__group--checkbox:not(:first-of-type) {
   margin-top: 40px;
+}
+@media screen and (max-width: 750px) {
+  .c-form-inputs__group, .c-form-inputs__group--radio, .c-form-inputs__group--checkbox {
+    display: block;
+  }
 }
 .c-form-inputs__label {
   -webkit-box-flex: 0;
@@ -616,6 +630,11 @@ body {
   font-size: 15px;
   width: 100%;
   max-width: 200px;
+}
+@media screen and (max-width: 750px) {
+  .c-form-inputs__label {
+    max-width: 100%;
+  }
 }
 .c-form-inputs__label .__required,
 .c-form-inputs__label .__any {
@@ -635,6 +654,12 @@ body {
 .c-form-inputs__input {
   width: 100%;
   padding-left: 40px;
+}
+@media screen and (max-width: 750px) {
+  .c-form-inputs__input {
+    margin-top: 10px;
+    padding-left: 0;
+  }
 }
 .c-form-inputs__input input.__error,
 .c-form-inputs__input textarea.__error,

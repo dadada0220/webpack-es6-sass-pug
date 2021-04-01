@@ -70,6 +70,7 @@
                 <h2 class="c-section__head p-test__head">Form</h2>
                 <div class="c-section__content p-test__content">
                   <form class="c-form" id="js-form">
+                    <div class="c-form__error-message u-mb40" data-js-form-error-message style="display: none;">入力内容に不備があります<br>お手数ですが再度入力内容をご確認ください</div>
                     <div class="c-form-inputs">
                       <div class="c-form-inputs__group">
                         <label class="c-form-inputs__label"><span class="__required">必須</span>氏名</label>
@@ -98,59 +99,63 @@
                         <div class="c-form-inputs__input">
                           <select name="selectbox" id="selectbox" required data-required-error="いずれかを選択してください">
                             <option value="">選択してください</option>
-                            <option value="1">〜19歳</option>
+                            <option value="1">10代</option>
                             <option value="2">20代</option>
                             <option value="3">30代</option>
                             <option value="4">40代</option>
                             <option value="5">50代</option>
-                            <option value="6">60代〜</option>
+                            <option value="6">60歳以上</option>
                           </select>
                           <div class="c-form-inputs__error-message" data-js-error-message="selectbox"></div>
                         </div>
                       </div>
                       <div class="c-form-inputs__group--checkbox">
-                        <label class="c-form-inputs__label"><span class="__required">必須</span>地域</label>
+                        <label class="c-form-inputs__label"><span class="__required">必須</span>雇用形態</label>
                         <div class="c-form-inputs__input">
                           <div class="l-flex">
                             <div>
-                              <input type="checkbox" name="aria" id="aria-tokyo" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="aria-tokyo">東京</label>
+                              <input type="checkbox" name="job" id="job-1" required data-required-error="1つ以上選択してください">
+                              <label for="job-1">会社員</label>
                             </div>
                             <div>
-                              <input type="checkbox" name="aria" id="aria-chiba" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="aria-chiba">千葉</label>
+                              <input type="checkbox" name="job" id="job-2" required data-required-error="1つ以上選択してください">
+                              <label for="job-2">公務員</label>
                             </div>
                             <div>
-                              <input type="checkbox" name="aria" id="aria-saitama" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="aria-saitama">埼玉</label>
+                              <input type="checkbox" name="job" id="job-3" required data-required-error="1つ以上選択してください">
+                              <label for="job-3">パート・アルバイト</label>
                             </div>
                             <div>
-                              <input type="checkbox" name="aria" id="aria-kanagawa" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="aria-kanagawa">神奈川</label>
+                              <input type="checkbox" name="job" id="job-4" required data-required-error="1つ以上選択してください">
+                              <label for="job-4">自営業（経営者）</label>
                             </div>
                             <div>
-                              <input type="checkbox" name="aria" id="aria-other" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="aria-other">その他</label>
+                              <input type="checkbox" name="job" id="job-5" required data-required-error="1つ以上選択してください">
+                              <label for="job-5">自営業（その他）</label>
+                            </div>
+                            <div>
+                              <input type="checkbox" name="job" id="job-6" required data-required-error="1つ以上選択してください">
+                              <label for="job-6">その他</label>
                             </div>
                           </div>
-                          <div class="c-form-inputs__error-message" data-js-error-message="aria"></div>
+                          <div class="c-form-inputs__error-message" data-js-error-message="job"></div>
                         </div>
                       </div>
                       <div class="c-form-inputs__group--radio">
-                        <label class="c-form-inputs__label"><span class="__required">必須</span>住まい</label>
+                        <label class="c-form-inputs__label"><span class="__required">必須</span>住居</label>
                         <div class="c-form-inputs__input">
                           <div class="l-flex">
                             <div>
-                              <input type="radio" name="house" id="house-my-home" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="house-my-home">持ち家</label>
+                              <input type="radio" name="house" id="house-1" required data-required-error="1つ以上選択してください">
+                              <label for="house-1">持ち家</label>
                             </div>
                             <div>
-                              <input type="radio" name="house" id="house-rent" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="house-rent">賃貸</label>
+                              <input type="radio" name="house" id="house-2" required data-required-error="1つ以上選択してください">
+                              <label for="house-2">賃貸</label>
                             </div>
                             <div>
-                              <input type="radio" name="house" id="house-other" required data-required-error="最低でも1つ以上、チェックを入れてください">
-                              <label for="house-other">その他</label>
+                              <input type="radio" name="house" id="house-3" required data-required-error="1つ以上選択してください">
+                              <label for="house-3">その他</label>
                             </div>
                           </div>
                           <div class="c-form-inputs__error-message" data-js-error-message="house"></div>
@@ -177,6 +182,7 @@
                     <div class="c-form-submit">
                       <button class="c-btn" type="submit">送信する</button>
                     </div>
+                    <div class="c-form__error-message u-mt40" data-js-form-error-message style="display: none;">入力内容に不備があります<br>お手数ですが再度入力内容をご確認ください</div>
                   </form>
                 </div>
               </div>

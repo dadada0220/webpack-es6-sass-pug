@@ -20,6 +20,9 @@ block content
           h2.c-section__head.p-test__head Form
           .c-section__content.p-test__content
             form.c-form#js-form
+              .c-form__error-message.u-mb40(data-js-form-error-message, style="display: none;") 入力内容に不備があります
+                br
+                | お手数ですが再度入力内容をご確認ください
               .c-form-inputs
                 .c-form-inputs__group
                   label.c-form-inputs__label
@@ -50,50 +53,53 @@ block content
                   .c-form-inputs__input
                     select(name="selectbox", id="selectbox", required, data-required-error="いずれかを選択してください")
                       option(value="") 選択してください
-                      option(value="1") 〜19歳
+                      option(value="1") 10代
                       option(value="2") 20代
                       option(value="3") 30代
                       option(value="4") 40代
                       option(value="5") 50代
-                      option(value="6") 60代〜
+                      option(value="6") 60歳以上
                     .c-form-inputs__error-message(data-js-error-message="selectbox")
                 .c-form-inputs__group--checkbox
                   label.c-form-inputs__label
                     span.__required 必須
-                    | 地域
+                    | 雇用形態
                   .c-form-inputs__input
                     .l-flex
                       div
-                        input(type="checkbox", name="aria", id="aria-tokyo" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="aria-tokyo") 東京
+                        input(type="checkbox", name="job", id="job-1" required, data-required-error="1つ以上選択してください")
+                        label(for="job-1") 会社員
                       div
-                        input(type="checkbox", name="aria", id="aria-chiba" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="aria-chiba") 千葉
+                        input(type="checkbox", name="job", id="job-2" required, data-required-error="1つ以上選択してください")
+                        label(for="job-2") 公務員
                       div
-                        input(type="checkbox", name="aria", id="aria-saitama" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="aria-saitama") 埼玉
+                        input(type="checkbox", name="job", id="job-3" required, data-required-error="1つ以上選択してください")
+                        label(for="job-3") パート・アルバイト
                       div
-                        input(type="checkbox", name="aria", id="aria-kanagawa" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="aria-kanagawa") 神奈川
+                        input(type="checkbox", name="job", id="job-4" required, data-required-error="1つ以上選択してください")
+                        label(for="job-4") 自営業（経営者）
                       div
-                        input(type="checkbox", name="aria", id="aria-other" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="aria-other") その他
-                    .c-form-inputs__error-message(data-js-error-message="aria")
+                        input(type="checkbox", name="job", id="job-5" required, data-required-error="1つ以上選択してください")
+                        label(for="job-5") 自営業（その他）
+                      div
+                        input(type="checkbox", name="job", id="job-6" required, data-required-error="1つ以上選択してください")
+                        label(for="job-6") その他
+                    .c-form-inputs__error-message(data-js-error-message="job")
                 .c-form-inputs__group--radio
                   label.c-form-inputs__label
                     span.__required 必須
-                    | 住まい
+                    | 住居
                   .c-form-inputs__input
                     .l-flex
                       div
-                        input(type="radio", name="house", id="house-my-home" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="house-my-home") 持ち家
+                        input(type="radio", name="house", id="house-1" required, data-required-error="1つ以上選択してください")
+                        label(for="house-1") 持ち家
                       div
-                        input(type="radio", name="house", id="house-rent" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="house-rent") 賃貸
+                        input(type="radio", name="house", id="house-2" required, data-required-error="1つ以上選択してください")
+                        label(for="house-2") 賃貸
                       div
-                        input(type="radio", name="house", id="house-other" required, data-required-error="最低でも1つ以上、チェックを入れてください")
-                        label(for="house-other") その他
+                        input(type="radio", name="house", id="house-3" required, data-required-error="1つ以上選択してください")
+                        label(for="house-3") その他
                     .c-form-inputs__error-message(data-js-error-message="house")
                 .c-form-inputs__group
                   label.c-form-inputs__label
@@ -112,3 +118,6 @@ block content
                       .c-form-inputs__error-message(data-js-error-message="privacy-policy")
               .c-form-submit
                 button.c-btn(type="submit") 送信する
+              .c-form__error-message.u-mt40(data-js-form-error-message, style="display: none;") 入力内容に不備があります
+                br
+                | お手数ですが再度入力内容をご確認ください

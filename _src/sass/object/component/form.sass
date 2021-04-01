@@ -5,6 +5,14 @@
 .c-form
   max-width: 600px
   margin: auto
+  &__error-message
+    color: $c--warning
+    font-size: 13px
+    text-align: center
+    background-color: rgba($c--warning, .1)
+    border: solid 1px $c--warning
+    border-radius: 2px
+    padding: 12px 12px
   &-inputs
     &__group
       $parent_inputs_group: &
@@ -12,6 +20,8 @@
       align-items: flex-start
       &:not(:first-of-type)
         margin-top: 40px
+      +max-screen($breackpoint_tb)
+        display: block
       &--checkbox
         @extend #{$parent_inputs_group}
       &--radio
@@ -23,6 +33,8 @@
       font-size: 15px
       width: 100%
       max-width: 200px
+      +max-screen($breackpoint_tb)
+        max-width: 100%
       .__required,
       .__any
         display: inline-block
@@ -38,6 +50,9 @@
     &__input
       width: 100%
       padding-left: 40px
+      +max-screen($breackpoint_tb)
+        margin-top: 10px
+        padding-left: 0
       input,
       textarea,
       select
