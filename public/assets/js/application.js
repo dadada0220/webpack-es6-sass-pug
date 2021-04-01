@@ -339,6 +339,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
  * 日本語解説記事: https://co.bsnws.net/article/182
  */
 var FormValidator = /*#__PURE__*/function () {
+  /**
+   * @property {Element} elmForm 【必須】フォーム
+   * @property {Array} elmTargetInputs 【必須】バリデーション対象となるinput要素の配列
+   * @property {String} classErrorInput input要素がエラー時に付与されるclass
+   * @property {String} classSecureInput input要素がバリデーションOK時に付与されるclass
+   * @property {String} attrElmErrorMessage エラーメッセージ要素とinput要素と紐付ける属性名
+   * @property {String} attrRequiredErrorMessage `required`のエラーメッセージの文言を変更するための属性名
+   * @property {String} defaultErrorMessage デフォルトのエラーメッセージ
+   * @property {Array} inputStatuses エラー状態などをプロパティとして持つバリデーション対象となるinput要素のオブジェクト
+   */
   function FormValidator(_parm) {
     _classCallCheck(this, FormValidator);
 
