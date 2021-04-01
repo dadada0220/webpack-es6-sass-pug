@@ -340,14 +340,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
  */
 var FormValidator = /*#__PURE__*/function () {
   /**
-   * @property {Element} elmForm 【必須】フォーム
+   * @property {Object} elmForm 【必須】form要素
    * @property {Array} elmTargetInputs 【必須】バリデーション対象となるinput要素の配列
-   * @property {String} classErrorInput input要素がエラー時に付与されるclass
-   * @property {String} classSecureInput input要素がバリデーションOK時に付与されるclass
-   * @property {String} attrElmErrorMessage エラーメッセージ要素とinput要素と紐付ける属性名
+   * @property {String} classErrorInput エラーの場合、input要素に付与されるclass
+   * @property {String} classSecureInput エラーが無い場合、input要素に付与されるclass
+   * @property {String} attrElmErrorMessage エラーメッセージ要素をinput要素と紐付けるための属性名
    * @property {String} attrRequiredErrorMessage `required`のエラーメッセージの文言を変更するための属性名
    * @property {String} defaultErrorMessage デフォルトのエラーメッセージ
-   * @property {Array} inputStatuses エラー状態などをプロパティとして持つバリデーション対象となるinput要素のオブジェクト
+   * @property {Object} inputStatuses バリデーション対象となる全てのinput要素のオブジェクト. エラーの状態などのプロパティを持つ
    */
   function FormValidator(_parm) {
     _classCallCheck(this, FormValidator);
@@ -359,7 +359,7 @@ var FormValidator = /*#__PURE__*/function () {
     this.attrElmErrorMessage = _parm.attrElmErrorMessage || 'data-js-error-message';
     this.attrRequiredErrorMessage = _parm.attrRequiredErrorMessage || 'data-required-error';
     this.defaultErrorMessage = _parm.defaultErrorMessage || '必須項目を入力してください';
-    this.inputStatuses = this.elmTargetInputs.map(function (_item, _index) {
+    this.inputStatuses = this.elmTargetInputs.map(function (_item) {
       var result = [];
       result['id'] = _item.id;
       result['name'] = _item.getAttribute('name');
@@ -368,8 +368,7 @@ var FormValidator = /*#__PURE__*/function () {
     });
   }
   /**
-   * input要素が一つでもバリデーションに引っかかってたら`true`を返す
-   * `true`: バリデーションエラー, `false`: エラー無し
+   * input要素が一つでもバリデーションエラーなら`true`を返す
    * @return {Boolean}
    */
 
@@ -382,8 +381,8 @@ var FormValidator = /*#__PURE__*/function () {
       }) ? false : true;
     }
     /**
-     * バリデーション対象となる要素の種類を返す
-     * 「checkbox, radio」、「select」、どちらも当てはまらない場合「input」のいずれかを返す
+     * バリデーション対象となるinput要素の種類を返す
+     * @param {Object} _elmInput バリデーション対象のinput要素
      * @return {String} 'checkOrRadio', 'select', 'input'
      */
 
@@ -396,8 +395,8 @@ var FormValidator = /*#__PURE__*/function () {
     }
     /**
      * input要素に付与されている`required`と`pattern`でバリデーションチェックを行う
-     * エラーなら`true`が返る
-     * @param {*} _elmInput バリデーション対象のinput要素
+     * エラーなら`true`を返す
+     * @param {Object} _elmInput バリデーション対象のinput要素
      * @returns {Boolean}
      */
 
@@ -416,17 +415,18 @@ var FormValidator = /*#__PURE__*/function () {
       return _elmInput.validity.valueMissing;
     }
     /**
-     * input要素のエラーメッセージ要素のテキストを描画
-     * @param {*} _elmInput バリデーション対象のinput要素
+     * input要素に紐づくエラーメッセージ要素のテキストを描画
+     * @param {Object} _elmInput バリデーション対象のinput要素
      */
 
   }, {
-    key: "showErrorMessage",
-    value: function showErrorMessage(_elmInput) {
+    key: "createErrorMessage",
+    value: function createErrorMessage(_elmInput) {
       var value = _elmInput.value;
 
       var name = _elmInput.getAttribute('name');
 
+      var elmErrorMessage = this.elmForm.querySelector("[".concat(this.attrElmErrorMessage, "=\"").concat(name, "\"]"));
       var patternErrorMessage = _elmInput.getAttribute('title') || false;
       var requiredErrorMessage = _elmInput.getAttribute(this.attrRequiredErrorMessage) || this.defaultErrorMessage;
       var errorMessage = '';
@@ -437,27 +437,31 @@ var FormValidator = /*#__PURE__*/function () {
         errorMessage = requiredErrorMessage;
       }
 
-      this.elmForm.querySelector("[".concat(this.attrElmErrorMessage, "=\"").concat(name, "\"]")).textContent = errorMessage;
+      elmErrorMessage.textContent = errorMessage;
       return;
     }
     /**
      * input要素のエラーをリセット
-     * @param {*} _elmInput バリデーション対象のinput要素
+     * @param {Object} _elmInput バリデーション対象のinput要素
      */
 
   }, {
     key: "errorReset",
     value: function errorReset(_elmInput) {
+      var name = _elmInput.getAttribute('name');
+
+      var elmErrorMessage = this.elmForm.querySelector("[".concat(this.attrElmErrorMessage, "=\"").concat(name, "\"]"));
+
       _elmInput.classList.remove(this.classErrorInput);
 
       _elmInput.classList.remove(this.classSecureInput);
 
-      this.elmForm.querySelector("[".concat(this.attrElmErrorMessage, "=\"").concat(_elmInput.getAttribute('name'), "\"]")).textContent = '';
+      elmErrorMessage.textContent = '';
       return;
     }
     /**
-     * input要素に対してバリデーションチェックやエラーメッセージの描画など、バリデーションに関する関数を全部実行する
-     * @param {*} _elmInput バリデーション対象のinput要素
+     * input要素に対してバリデーションチェックやエラーメッセージの描画など、バリデーションに関する関数を全て実行する
+     * @param {Object} _elmInput バリデーション対象のinput要素
      */
 
   }, {
@@ -466,7 +470,7 @@ var FormValidator = /*#__PURE__*/function () {
       var _this = this;
 
       // エラーリセット
-      this.errorReset(_elmInput); // バリデーションチェックやエラーメッセージの描画などを実行
+      this.errorReset(_elmInput); // 必要な変数定義
 
       var isError = this.errorCheck(_elmInput);
 
@@ -487,14 +491,15 @@ var FormValidator = /*#__PURE__*/function () {
         var isChecked = checkOrRadioInputStatuses.some(function (_item) {
           return !_item['isError'];
         });
-        !isChecked ? this.showErrorMessage(_elmInput) : false;
+        !isChecked ? this.createErrorMessage(_elmInput) : false;
         return;
-      }
+      } // バリデーションチェックやエラーメッセージの描画などを実行
+
 
       if (isError) {
         _elmInput.classList.add(this.classErrorInput);
 
-        this.showErrorMessage(_elmInput);
+        this.createErrorMessage(_elmInput);
         changeInputStatusArray(true);
       } else {
         _elmInput.classList.add(this.classSecureInput);

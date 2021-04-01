@@ -8,14 +8,14 @@
  */
 export default class FormValidator {
   /**
-   * @property {Element} elmForm 【必須】フォーム
+   * @property {Object} elmForm 【必須】form要素
    * @property {Array} elmTargetInputs 【必須】バリデーション対象となるinput要素の配列
-   * @property {String} classErrorInput input要素がエラー時に付与されるclass
-   * @property {String} classSecureInput input要素がバリデーションOK時に付与されるclass
-   * @property {String} attrElmErrorMessage エラーメッセージ要素とinput要素と紐付ける属性名
+   * @property {String} classErrorInput エラーの場合、input要素に付与されるclass
+   * @property {String} classSecureInput エラーが無い場合、input要素に付与されるclass
+   * @property {String} attrElmErrorMessage エラーメッセージ要素をinput要素と紐付けるための属性名
    * @property {String} attrRequiredErrorMessage `required`のエラーメッセージの文言を変更するための属性名
    * @property {String} defaultErrorMessage デフォルトのエラーメッセージ
-   * @property {Array} inputStatuses エラー状態などをプロパティとして持つバリデーション対象となるinput要素のオブジェクト
+   * @property {Object} inputStatuses バリデーション対象となる全てのinput要素のオブジェクト. エラーの状態などのプロパティを持つ
    */
   constructor(_parm) {
     this.elmForm = document.querySelector(_parm.form) || false;
@@ -25,7 +25,7 @@ export default class FormValidator {
     this.attrElmErrorMessage = _parm.attrElmErrorMessage || 'data-js-error-message';
     this.attrRequiredErrorMessage = _parm.attrRequiredErrorMessage || 'data-required-error';
     this.defaultErrorMessage = _parm.defaultErrorMessage || '必須項目を入力してください';
-    this.inputStatuses = this.elmTargetInputs.map((_item, _index) => {
+    this.inputStatuses = this.elmTargetInputs.map((_item) => {
       let result = [];
       result['id'] = _item.id;
       result['name'] = _item.getAttribute('name');
@@ -35,8 +35,7 @@ export default class FormValidator {
   }
 
   /**
-   * input要素が一つでもバリデーションに引っかかってたら`true`を返す
-   * `true`: バリデーションエラー, `false`: エラー無し
+   * input要素が一つでもバリデーションエラーなら`true`を返す
    * @return {Boolean}
    */
   getIsError() {
@@ -44,8 +43,8 @@ export default class FormValidator {
   }
 
   /**
-   * バリデーション対象となる要素の種類を返す
-   * 「checkbox, radio」、「select」、どちらも当てはまらない場合「input」のいずれかを返す
+   * バリデーション対象となるinput要素の種類を返す
+   * @param {Object} _elmInput バリデーション対象のinput要素
    * @return {String} 'checkOrRadio', 'select', 'input'
    */
   getInputType(_elmInput) {
@@ -56,8 +55,8 @@ export default class FormValidator {
 
   /**
    * input要素に付与されている`required`と`pattern`でバリデーションチェックを行う
-   * エラーなら`true`が返る
-   * @param {*} _elmInput バリデーション対象のinput要素
+   * エラーなら`true`を返す
+   * @param {Object} _elmInput バリデーション対象のinput要素
    * @returns {Boolean}
    */
   errorCheck(_elmInput) {
@@ -76,12 +75,13 @@ export default class FormValidator {
   }
 
   /**
-   * input要素のエラーメッセージ要素のテキストを描画
-   * @param {*} _elmInput バリデーション対象のinput要素
+   * input要素に紐づくエラーメッセージ要素のテキストを描画
+   * @param {Object} _elmInput バリデーション対象のinput要素
    */
-  showErrorMessage(_elmInput) {
+  createErrorMessage(_elmInput) {
     const value = _elmInput.value;
     const name = _elmInput.getAttribute('name');
+    const elmErrorMessage = this.elmForm.querySelector(`[${this.attrElmErrorMessage}="${name}"]`);
     const patternErrorMessage = _elmInput.getAttribute('title') || false;
     const requiredErrorMessage =
       _elmInput.getAttribute(this.attrRequiredErrorMessage) || this.defaultErrorMessage;
@@ -91,33 +91,31 @@ export default class FormValidator {
     } else {
       errorMessage = requiredErrorMessage;
     }
-    this.elmForm.querySelector(
-      `[${this.attrElmErrorMessage}="${name}"]`
-    ).textContent = errorMessage;
+    elmErrorMessage.textContent = errorMessage;
     return;
   }
 
   /**
    * input要素のエラーをリセット
-   * @param {*} _elmInput バリデーション対象のinput要素
+   * @param {Object} _elmInput バリデーション対象のinput要素
    */
   errorReset(_elmInput) {
+    const name = _elmInput.getAttribute('name');
+    const elmErrorMessage = this.elmForm.querySelector(`[${this.attrElmErrorMessage}="${name}"]`);
     _elmInput.classList.remove(this.classErrorInput);
     _elmInput.classList.remove(this.classSecureInput);
-    this.elmForm.querySelector(
-      `[${this.attrElmErrorMessage}="${_elmInput.getAttribute('name')}"]`
-    ).textContent = '';
+    elmErrorMessage.textContent = '';
     return;
   }
 
   /**
-   * input要素に対してバリデーションチェックやエラーメッセージの描画など、バリデーションに関する関数を全部実行する
-   * @param {*} _elmInput バリデーション対象のinput要素
+   * input要素に対してバリデーションチェックやエラーメッセージの描画など、バリデーションに関する関数を全て実行する
+   * @param {Object} _elmInput バリデーション対象のinput要素
    */
   validate(_elmInput) {
     // エラーリセット
     this.errorReset(_elmInput);
-    // バリデーションチェックやエラーメッセージの描画などを実行
+    // 必要な変数定義
     const isError = this.errorCheck(_elmInput);
     const changeInputStatusArray = (_isErrorValue) => {
       const targetInputStatus = this.inputStatuses.find((_item) => {
@@ -125,7 +123,6 @@ export default class FormValidator {
       });
       targetInputStatus['isError'] = _isErrorValue;
     };
-
     // チェックボックスかラジオボタンの場合、いずれかがチェックされていればエラーにしない
     if (this.getInputType(_elmInput) === 'checkOrRadio') {
       isError ? changeInputStatusArray(true) : changeInputStatusArray(false);
@@ -135,13 +132,13 @@ export default class FormValidator {
       const isChecked = checkOrRadioInputStatuses.some((_item) => {
         return !_item['isError'];
       });
-      !isChecked ? this.showErrorMessage(_elmInput) : false;
+      !isChecked ? this.createErrorMessage(_elmInput) : false;
       return;
     }
-
+    // バリデーションチェックやエラーメッセージの描画などを実行
     if (isError) {
       _elmInput.classList.add(this.classErrorInput);
-      this.showErrorMessage(_elmInput);
+      this.createErrorMessage(_elmInput);
       changeInputStatusArray(true);
     } else {
       _elmInput.classList.add(this.classSecureInput);
