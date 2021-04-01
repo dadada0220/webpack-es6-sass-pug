@@ -27,7 +27,7 @@ const init = () => {
   (() => {
     const formValidator = new FormValidator({
       form: '#js-form',
-      targetInputs: 'input[required]',
+      targetInputs: 'input[required], select[required]',
     });
     formValidator.init();
   })();

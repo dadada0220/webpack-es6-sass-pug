@@ -126,7 +126,7 @@ var init = function init() {
   (function () {
     var formValidator = new _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__["default"]({
       form: '#js-form',
-      targetInputs: 'input[required]'
+      targetInputs: 'input[required], select[required]'
     });
     formValidator.init();
   })();
@@ -346,31 +346,62 @@ var FormValidator = /*#__PURE__*/function () {
     this.elmTargetInputs = _toConsumableArray(this.elmForm.querySelectorAll(_parm.targetInputs));
     this.classErrorInput = _parm.classErrorInput || '__error';
     this.classSecureInput = _parm.classSecureInput || '__secure';
-    this.attrErrorMessage = _parm.attrErrorMessage || 'data-js-error-message';
+    this.attrElmErrorMessage = _parm.attrElmErrorMessage || 'data-js-error-message';
+    this.attrRequiredErrorMessage = _parm.attrRequiredErrorMessage || 'data-required-error';
     this.defaultErrorMessage = _parm.defaultErrorMessage || '必須項目を入力してください';
-    this.inputStatuses = this.elmTargetInputs.map(function (_value, _index) {
+    this.inputStatuses = this.elmTargetInputs.map(function (_item, _index) {
       var result = [];
-      result['name'] = _value.getAttribute('name');
+      result['id'] = _item.id;
+      result['name'] = _item.getAttribute('name');
       result['isError'] = true;
       return result;
     });
   }
   /**
-   * input要素に付与されている`required`と`pattern`でバリデーションチェックを行う
-   * エラーなら`true`が返る
-   * @param {*} _elmInput バリデーション対象のinput要素
-   * @returns true;
+   * input要素が一つでもバリデーションに引っかかってたら`true`を返す
+   * `true`: バリデーションエラー, `false`: エラー無し
+   * @return {Boolean}
    */
 
 
   _createClass(FormValidator, [{
+    key: "getIsError",
+    value: function getIsError() {
+      return this.inputStatuses.every(function (_item) {
+        return _item['isError'] === false;
+      }) ? false : true;
+    }
+    /**
+     * バリデーション対象となる要素の種類を返す
+     * 「checkbox, radio」、「select」、どちらも当てはまらない場合「input」のいずれかを返す
+     * @return {String} 'checkOrRadio', 'select', 'input'
+     */
+
+  }, {
+    key: "getInputType",
+    value: function getInputType(_elmInput) {
+      if (_elmInput.tagName === 'SELECT') return 'select';
+      if (_elmInput.getAttribute('type').match(/checkbox|radio/)) return 'checkOrRadio';
+      return 'input';
+    }
+    /**
+     * input要素に付与されている`required`と`pattern`でバリデーションチェックを行う
+     * エラーなら`true`が返る
+     * @param {*} _elmInput バリデーション対象のinput要素
+     * @returns {Boolean}
+     */
+
+  }, {
     key: "errorCheck",
     value: function errorCheck(_elmInput) {
       var patternValidate = _elmInput.getAttribute('pattern') || false;
+      var inputType = this.getInputType(_elmInput); // セレクトボックスの場合
 
-      if (patternValidate) {
-        return !_elmInput.validity.patternMismatch && _elmInput.value.length ? false : true;
-      }
+      if (inputType === 'select') return !_elmInput.validity.patternMismatch && _elmInput.value.length ? false : true; // チェックボックスかラジオボタンの場合
+
+      if (inputType === 'checkOrRadio') return _elmInput.checked ? false : true; // input（パターン有り）の場合
+
+      if (patternValidate) return !_elmInput.validity.patternMismatch && _elmInput.value.length ? false : true; // input（パターン無し）の場合
 
       return _elmInput.validity.valueMissing;
     }
@@ -387,15 +418,16 @@ var FormValidator = /*#__PURE__*/function () {
       var name = _elmInput.getAttribute('name');
 
       var patternErrorMessage = _elmInput.getAttribute('title') || false;
+      var requiredErrorMessage = _elmInput.getAttribute(this.attrRequiredErrorMessage) || this.defaultErrorMessage;
       var errorMessage = '';
 
       if (patternErrorMessage) {
-        errorMessage = value.length ? patternErrorMessage : this.defaultErrorMessage;
+        errorMessage = value.length ? patternErrorMessage : requiredErrorMessage;
       } else {
-        errorMessage = this.defaultErrorMessage;
+        errorMessage = requiredErrorMessage;
       }
 
-      this.elmForm.querySelector("[".concat(this.attrErrorMessage, "=\"").concat(name, "\"]")).textContent = errorMessage;
+      this.elmForm.querySelector("[".concat(this.attrElmErrorMessage, "=\"").concat(name, "\"]")).textContent = errorMessage;
       return;
     }
     /**
@@ -410,7 +442,7 @@ var FormValidator = /*#__PURE__*/function () {
 
       _elmInput.classList.remove(this.classSecureInput);
 
-      this.elmForm.querySelector("[".concat(this.attrErrorMessage, "=\"").concat(_elmInput.getAttribute('name'), "\"]")).textContent = '';
+      this.elmForm.querySelector("[".concat(this.attrElmErrorMessage, "=\"").concat(_elmInput.getAttribute('name'), "\"]")).textContent = '';
       return;
     }
     /**
@@ -430,11 +462,24 @@ var FormValidator = /*#__PURE__*/function () {
 
       var changeInputStatusArray = function changeInputStatusArray(_isErrorValue) {
         var targetInputStatus = _this.inputStatuses.find(function (_item) {
-          return _item.name === _elmInput.getAttribute('name');
+          return _item.id === _elmInput.id;
         });
 
         targetInputStatus['isError'] = _isErrorValue;
-      };
+      }; // チェックボックスかラジオボタンの場合、いずれかがチェックされていればエラーにしない
+
+
+      if (this.getInputType(_elmInput) === 'checkOrRadio') {
+        isError ? changeInputStatusArray(true) : changeInputStatusArray(false);
+        var checkOrRadioInputStatuses = this.inputStatuses.filter(function (_item, _index, _self) {
+          return _item['name'] === _elmInput.getAttribute('name');
+        });
+        var isChecked = checkOrRadioInputStatuses.some(function (_item) {
+          return !_item['isError'];
+        });
+        !isChecked ? this.showErrorMessage(_elmInput) : false;
+        return;
+      }
 
       if (isError) {
         _elmInput.classList.add(this.classErrorInput);
@@ -449,19 +494,6 @@ var FormValidator = /*#__PURE__*/function () {
 
       return;
     }
-    /**
-     * input要素が一つでもバリデーションに引っかかってたら`true`を返す
-     * `true`: バリデーションエラー, `false`: エラー無し
-     * @return Boolean
-     */
-
-  }, {
-    key: "getIsError",
-    value: function getIsError() {
-      return this.inputStatuses.every(function (_item) {
-        return _item['isError'] === false;
-      }) ? false : true;
-    }
   }, {
     key: "addEvent",
     value: function addEvent() {
@@ -472,7 +504,7 @@ var FormValidator = /*#__PURE__*/function () {
        */
       this.elmTargetInputs.forEach(function (_elmTargetInput) {
         // フォーカスアウト時
-        _elmTargetInput.addEventListener('blur', function (_ev) {
+        _elmTargetInput.addEventListener('change', function (_ev) {
           _this2.validate(_elmTargetInput);
         }); // エラー時
 

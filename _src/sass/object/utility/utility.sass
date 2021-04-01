@@ -35,11 +35,11 @@
   &-border-bottom-none
     border-bottom: none !important
 
-  &-w-100p
+  &-w100p
     width: 100% !important
   &-w-auto
     width: auto !important
-  &-h-100p
+  &-h100p
     height: 100% !important
   &-h-auto
     height: auto !important
@@ -55,6 +55,12 @@
     text-align: left !important
   &-text-right
     text-align: right !important
+
+  &-link
+    color: $c--link
+    text-decoration: underline
+    &:hover
+      text-decoration: none
 
 // margin
 $marginType: (top: ("mt", "margin-top"), left: ("ml", "margin-left"), right: ("mr", "margin-right"), bottom: ("mb", "margin-bottom"))

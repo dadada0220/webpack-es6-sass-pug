@@ -12,27 +12,56 @@ export default class FormValidator {
     this.elmTargetInputs = [...this.elmForm.querySelectorAll(_parm.targetInputs)];
     this.classErrorInput = _parm.classErrorInput || '__error';
     this.classSecureInput = _parm.classSecureInput || '__secure';
-    this.attrErrorMessage = _parm.attrErrorMessage || 'data-js-error-message';
+    this.attrElmErrorMessage = _parm.attrElmErrorMessage || 'data-js-error-message';
+    this.attrRequiredErrorMessage = _parm.attrRequiredErrorMessage || 'data-required-error';
     this.defaultErrorMessage = _parm.defaultErrorMessage || '必須項目を入力してください';
-    this.inputStatuses = this.elmTargetInputs.map((_value, _index) => {
+    this.inputStatuses = this.elmTargetInputs.map((_item, _index) => {
       let result = [];
-      result['name'] = _value.getAttribute('name');
+      result['id'] = _item.id;
+      result['name'] = _item.getAttribute('name');
       result['isError'] = true;
       return result;
     });
   }
 
   /**
+   * input要素が一つでもバリデーションに引っかかってたら`true`を返す
+   * `true`: バリデーションエラー, `false`: エラー無し
+   * @return {Boolean}
+   */
+  getIsError() {
+    return this.inputStatuses.every((_item) => _item['isError'] === false) ? false : true;
+  }
+
+  /**
+   * バリデーション対象となる要素の種類を返す
+   * 「checkbox, radio」、「select」、どちらも当てはまらない場合「input」のいずれかを返す
+   * @return {String} 'checkOrRadio', 'select', 'input'
+   */
+  getInputType(_elmInput) {
+    if (_elmInput.tagName === 'SELECT') return 'select';
+    if (_elmInput.getAttribute('type').match(/checkbox|radio/)) return 'checkOrRadio';
+    return 'input';
+  }
+
+  /**
    * input要素に付与されている`required`と`pattern`でバリデーションチェックを行う
    * エラーなら`true`が返る
    * @param {*} _elmInput バリデーション対象のinput要素
-   * @returns true;
+   * @returns {Boolean}
    */
   errorCheck(_elmInput) {
     const patternValidate = _elmInput.getAttribute('pattern') || false;
-    if (patternValidate) {
+    const inputType = this.getInputType(_elmInput);
+    // セレクトボックスの場合
+    if (inputType === 'select')
       return !_elmInput.validity.patternMismatch && _elmInput.value.length ? false : true;
-    }
+    // チェックボックスかラジオボタンの場合
+    if (inputType === 'checkOrRadio') return _elmInput.checked ? false : true;
+    // input（パターン有り）の場合
+    if (patternValidate)
+      return !_elmInput.validity.patternMismatch && _elmInput.value.length ? false : true;
+    // input（パターン無し）の場合
     return _elmInput.validity.valueMissing;
   }
 
@@ -44,13 +73,17 @@ export default class FormValidator {
     const value = _elmInput.value;
     const name = _elmInput.getAttribute('name');
     const patternErrorMessage = _elmInput.getAttribute('title') || false;
+    const requiredErrorMessage =
+      _elmInput.getAttribute(this.attrRequiredErrorMessage) || this.defaultErrorMessage;
     let errorMessage = '';
     if (patternErrorMessage) {
-      errorMessage = value.length ? patternErrorMessage : this.defaultErrorMessage;
+      errorMessage = value.length ? patternErrorMessage : requiredErrorMessage;
     } else {
-      errorMessage = this.defaultErrorMessage;
+      errorMessage = requiredErrorMessage;
     }
-    this.elmForm.querySelector(`[${this.attrErrorMessage}="${name}"]`).textContent = errorMessage;
+    this.elmForm.querySelector(
+      `[${this.attrElmErrorMessage}="${name}"]`
+    ).textContent = errorMessage;
     return;
   }
 
@@ -62,7 +95,7 @@ export default class FormValidator {
     _elmInput.classList.remove(this.classErrorInput);
     _elmInput.classList.remove(this.classSecureInput);
     this.elmForm.querySelector(
-      `[${this.attrErrorMessage}="${_elmInput.getAttribute('name')}"]`
+      `[${this.attrElmErrorMessage}="${_elmInput.getAttribute('name')}"]`
     ).textContent = '';
     return;
   }
@@ -78,10 +111,24 @@ export default class FormValidator {
     const isError = this.errorCheck(_elmInput);
     const changeInputStatusArray = (_isErrorValue) => {
       const targetInputStatus = this.inputStatuses.find((_item) => {
-        return _item.name === _elmInput.getAttribute('name');
+        return _item.id === _elmInput.id;
       });
       targetInputStatus['isError'] = _isErrorValue;
     };
+
+    // チェックボックスかラジオボタンの場合、いずれかがチェックされていればエラーにしない
+    if (this.getInputType(_elmInput) === 'checkOrRadio') {
+      isError ? changeInputStatusArray(true) : changeInputStatusArray(false);
+      const checkOrRadioInputStatuses = this.inputStatuses.filter((_item, _index, _self) => {
+        return _item['name'] === _elmInput.getAttribute('name');
+      });
+      const isChecked = checkOrRadioInputStatuses.some((_item) => {
+        return !_item['isError'];
+      });
+      !isChecked ? this.showErrorMessage(_elmInput) : false;
+      return;
+    }
+
     if (isError) {
       _elmInput.classList.add(this.classErrorInput);
       this.showErrorMessage(_elmInput);
@@ -93,22 +140,13 @@ export default class FormValidator {
     return;
   }
 
-  /**
-   * input要素が一つでもバリデーションに引っかかってたら`true`を返す
-   * `true`: バリデーションエラー, `false`: エラー無し
-   * @return Boolean
-   */
-  getIsError() {
-    return this.inputStatuses.every((_item) => _item['isError'] === false) ? false : true;
-  }
-
   addEvent() {
     /**
      * Input
      */
     this.elmTargetInputs.forEach((_elmTargetInput) => {
       // フォーカスアウト時
-      _elmTargetInput.addEventListener('blur', (_ev) => {
+      _elmTargetInput.addEventListener('change', (_ev) => {
         this.validate(_elmTargetInput);
       });
       // エラー時
