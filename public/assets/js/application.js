@@ -126,7 +126,8 @@ var init = function init() {
   (function () {
     var formValidator = new _module_FormValidator__WEBPACK_IMPORTED_MODULE_1__["default"]({
       form: '#js-form',
-      targetInputs: 'input[required], select[required]'
+      targetInputs: 'input[required], select[required]',
+      submitBtn: 'button[type="submit"]'
     });
     formValidator.init();
   })();
@@ -332,7 +333,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 /**
  * フォームのバリデーションを実行するクラス
- * `elmForm`, `elmTargetInputs`は必須
+ * `elmForm`, `elmTargetInputs`, `elmSubmitBtn`は必須
  *
  * 場合によっては、以下ライブラリでバリデーションするでも良いかも
  * 公式: https://imbrn.github.io/v8n/#what-s-v8n
@@ -342,6 +343,7 @@ var FormValidator = /*#__PURE__*/function () {
   /**
    * @property {Object} elmForm 【必須】form要素
    * @property {Array} elmTargetInputs 【必須】バリデーション対象となるinput要素の配列
+   * @property {Object} elmSubmitBtn 【必須】送信ボタンの要素
    * @property {Array} elmFormErrorMessages フォーム全体のエラーメッセージ要素の配列
    * @property {String} classErrorInput エラーの場合、input要素に付与されるclass
    * @property {String} classSecureInput エラーが無い場合、input要素に付与されるclass
@@ -349,25 +351,32 @@ var FormValidator = /*#__PURE__*/function () {
    * @property {String} attrRequiredErrorMessage `required`のエラーメッセージの文言を変更するための属性名
    * @property {String} defaultErrorMessage デフォルトのエラーメッセージ
    * @property {Object} inputStatuses バリデーション対象となる全てのinput要素のオブジェクト. エラーの状態などのプロパティを持つ
+   * @property {Boolean} isFirstSubmit 1回でも送信ボタンをクリックしたら`true`
    */
   function FormValidator(_parm) {
     _classCallCheck(this, FormValidator);
 
     this.elmForm = document.querySelector(_parm.form) || false;
     this.elmTargetInputs = _toConsumableArray(this.elmForm.querySelectorAll(_parm.targetInputs));
+    this.elmSubmitBtn = this.elmForm.querySelector(_parm.submitBtn);
     this.elmFormErrorMessages = _toConsumableArray(this.elmForm.querySelectorAll('[data-js-form-error-message]'));
     this.classErrorInput = _parm.classErrorInput || '__error';
     this.classSecureInput = _parm.classSecureInput || '__secure';
     this.attrElmErrorMessage = _parm.attrElmErrorMessage || 'data-js-error-message';
     this.attrRequiredErrorMessage = _parm.attrRequiredErrorMessage || 'data-required-error';
     this.defaultErrorMessage = _parm.defaultErrorMessage || '必須項目を入力してください';
-    this.inputStatuses = this.elmTargetInputs.map(function (_item) {
+    var createInputStatuses = this.elmTargetInputs.map(function (_item) {
       var result = [];
-      result['id'] = _item.id;
       result['name'] = _item.getAttribute('name');
       result['isError'] = true;
       return result;
     });
+    this.inputStatuses = createInputStatuses.filter(function (_item, _index, _self) {
+      return _self.findIndex(function (_ev) {
+        return _ev.name === _item.name;
+      }) === _index;
+    });
+    this.isFirstSubmit = false;
   }
   /**
    * input要素が一つでもバリデーションエラーなら`true`を返す
@@ -376,8 +385,8 @@ var FormValidator = /*#__PURE__*/function () {
 
 
   _createClass(FormValidator, [{
-    key: "getIsError",
-    value: function getIsError() {
+    key: "getIsFormError",
+    value: function getIsFormError() {
       return this.inputStatuses.every(function (_item) {
         return _item['isError'] === false;
       }) ? false : true;
@@ -471,7 +480,6 @@ var FormValidator = /*#__PURE__*/function () {
       _elmInput.classList.remove(this.classSecureInput);
 
       elmErrorMessage.textContent = '';
-      this.toggleFormErrorMessage(false);
       return;
     }
     /**
@@ -482,35 +490,40 @@ var FormValidator = /*#__PURE__*/function () {
   }, {
     key: "validate",
     value: function validate(_elmInput) {
-      var _this = this;
-
       // エラーリセット
       this.errorReset(_elmInput); // 必要な変数定義
 
       var isError = this.errorCheck(_elmInput);
+      var targetInputStatus = this.inputStatuses.find(function (_item) {
+        return _item.name === _elmInput.getAttribute('name');
+      });
 
       var changeInputStatusArray = function changeInputStatusArray(_isErrorValue) {
-        var targetInputStatus = _this.inputStatuses.find(function (_item) {
-          return _item.id === _elmInput.id;
-        });
-
         targetInputStatus['isError'] = _isErrorValue;
       }; // チェックボックスかラジオボタンの場合、いずれかがチェックされていればエラーにしない
 
 
       if (this.getInputType(_elmInput) === 'checkOrRadio') {
-        isError ? changeInputStatusArray(true) : changeInputStatusArray(false);
-        var checkOrRadioInputStatuses = this.inputStatuses.filter(function (_item, _index, _self) {
-          return _item['name'] === _elmInput.getAttribute('name');
-        });
-        var isChecked = checkOrRadioInputStatuses.some(function (_item) {
-          return !_item['isError'];
-        });
+        var ElmsCheckOrRadio = _toConsumableArray(document.querySelectorAll("input[name=\"".concat(targetInputStatus['name'], "\"]")));
 
-        if (isChecked) {
-          this.toggleFormErrorMessage(false);
+        var getIsAnyChecked = function getIsAnyChecked() {
+          return ElmsCheckOrRadio.some(function (_elm) {
+            return _elm.checked;
+          });
+        };
+
+        var toggleAllCheckOrRadioRequired = function toggleAllCheckOrRadioRequired(_value) {
+          ElmsCheckOrRadio.forEach(function (_elm) {
+            _elm.required = _value;
+          });
+        };
+
+        if (getIsAnyChecked()) {
+          toggleAllCheckOrRadioRequired(false);
+          changeInputStatusArray(false);
         } else {
-          this.toggleFormErrorMessage(true);
+          toggleAllCheckOrRadioRequired(true);
+          changeInputStatusArray(true);
           this.createInputErrorMessage(_elmInput);
         }
 
@@ -521,14 +534,12 @@ var FormValidator = /*#__PURE__*/function () {
       if (isError) {
         _elmInput.classList.add(this.classErrorInput);
 
-        this.createInputErrorMessage(_elmInput);
-        this.toggleFormErrorMessage(true);
         changeInputStatusArray(true);
+        this.createInputErrorMessage(_elmInput);
       } else {
-        _elmInput.classList.add(this.classSecureInput);
-
-        this.toggleFormErrorMessage(false);
         changeInputStatusArray(false);
+
+        _elmInput.classList.add(this.classSecureInput);
       }
 
       return;
@@ -536,7 +547,7 @@ var FormValidator = /*#__PURE__*/function () {
   }, {
     key: "addEvent",
     value: function addEvent() {
-      var _this2 = this;
+      var _this = this;
 
       /**
        * Input
@@ -544,13 +555,23 @@ var FormValidator = /*#__PURE__*/function () {
       this.elmTargetInputs.forEach(function (_elmTargetInput) {
         // フォーカスアウト時
         _elmTargetInput.addEventListener('change', function (_ev) {
-          _this2.validate(_elmTargetInput);
+          _this.validate(_elmTargetInput);
+
+          _this.isFirstSubmit ? _this.getIsFormError() ? _this.toggleFormErrorMessage(true) : _this.toggleFormErrorMessage(false) : false;
         }); // エラー時
 
 
         _elmTargetInput.addEventListener('invalid', function (_ev) {
-          _this2.validate(_elmTargetInput);
+          _this.validate(_elmTargetInput);
         });
+      });
+      /**
+       * SubmitBtn
+       */
+
+      this.elmSubmitBtn.addEventListener('click', function (_ev) {
+        _this.isFirstSubmit = true;
+        _this.getIsFormError() ? _this.toggleFormErrorMessage(true) : _this.toggleFormErrorMessage(false);
       });
       /**
        * Form
@@ -559,8 +580,8 @@ var FormValidator = /*#__PURE__*/function () {
       this.elmForm.addEventListener('submit', function (_ev) {
         _ev.preventDefault();
 
-        if (!_this2.getIsError()) {
-          console.log('Submit!'); // this.elmForm.submit();
+        if (!_this.getIsFormError()) {
+          console.log('Validate OK!'); // this.elmForm.submit();
         }
       });
     }
