@@ -1,6 +1,6 @@
 /**
  * フォームのバリデーションを実行するクラス
- * `elmForm`, `elmTargetInputs`は必須
+ * `elmForm`, `elmTargetInputs`, `elmSubmitBtn`は必須
  *
  * 場合によっては、以下ライブラリでバリデーションするでも良いかも
  * 公式: https://imbrn.github.io/v8n/#what-s-v8n
@@ -10,6 +10,7 @@ export default class FormValidator {
   /**
    * @property {Object} elmForm 【必須】form要素
    * @property {Array} elmTargetInputs 【必須】バリデーション対象となるinput要素の配列
+   * @property {Object} elmSubmitBtn 【必須】送信ボタンの要素
    * @property {Array} elmFormErrorMessages フォーム全体のエラーメッセージ要素の配列
    * @property {String} classErrorInput エラーの場合、input要素に付与されるclass
    * @property {String} classSecureInput エラーが無い場合、input要素に付与されるclass
@@ -17,30 +18,35 @@ export default class FormValidator {
    * @property {String} attrRequiredErrorMessage `required`のエラーメッセージの文言を変更するための属性名
    * @property {String} defaultErrorMessage デフォルトのエラーメッセージ
    * @property {Object} inputStatuses バリデーション対象となる全てのinput要素のオブジェクト. エラーの状態などのプロパティを持つ
+   * @property {Boolean} isFirstSubmit 1回でも送信ボタンをクリックしたら`true`
    */
   constructor(_parm) {
     this.elmForm = document.querySelector(_parm.form) || false;
     this.elmTargetInputs = [...this.elmForm.querySelectorAll(_parm.targetInputs)];
+    this.elmSubmitBtn = this.elmForm.querySelector(_parm.submitBtn);
     this.elmFormErrorMessages = [...this.elmForm.querySelectorAll('[data-js-form-error-message]')];
     this.classErrorInput = _parm.classErrorInput || '__error';
     this.classSecureInput = _parm.classSecureInput || '__secure';
     this.attrElmErrorMessage = _parm.attrElmErrorMessage || 'data-js-error-message';
     this.attrRequiredErrorMessage = _parm.attrRequiredErrorMessage || 'data-required-error';
     this.defaultErrorMessage = _parm.defaultErrorMessage || '必須項目を入力してください';
-    this.inputStatuses = this.elmTargetInputs.map((_item) => {
+    const createInputStatuses = this.elmTargetInputs.map((_item) => {
       let result = [];
-      result['id'] = _item.id;
       result['name'] = _item.getAttribute('name');
       result['isError'] = true;
       return result;
     });
+    this.inputStatuses = createInputStatuses.filter(
+      (_item, _index, _self) => _self.findIndex((_ev) => _ev.name === _item.name) === _index
+    );
+    this.isFirstSubmit = false;
   }
 
   /**
    * input要素が一つでもバリデーションエラーなら`true`を返す
    * @return {Boolean}
    */
-  getIsError() {
+  getIsFormError() {
     return this.inputStatuses.every((_item) => _item['isError'] === false) ? false : true;
   }
 
@@ -119,7 +125,6 @@ export default class FormValidator {
     _elmInput.classList.remove(this.classErrorInput);
     _elmInput.classList.remove(this.classSecureInput);
     elmErrorMessage.textContent = '';
-    this.toggleFormErrorMessage(false);
     return;
   }
 
@@ -130,41 +135,50 @@ export default class FormValidator {
   validate(_elmInput) {
     // エラーリセット
     this.errorReset(_elmInput);
+
     // 必要な変数定義
     const isError = this.errorCheck(_elmInput);
+    const targetInputStatus = this.inputStatuses.find((_item) => {
+      return _item.name === _elmInput.getAttribute('name');
+    });
     const changeInputStatusArray = (_isErrorValue) => {
-      const targetInputStatus = this.inputStatuses.find((_item) => {
-        return _item.id === _elmInput.id;
-      });
       targetInputStatus['isError'] = _isErrorValue;
     };
+
     // チェックボックスかラジオボタンの場合、いずれかがチェックされていればエラーにしない
     if (this.getInputType(_elmInput) === 'checkOrRadio') {
-      isError ? changeInputStatusArray(true) : changeInputStatusArray(false);
-      const checkOrRadioInputStatuses = this.inputStatuses.filter((_item, _index, _self) => {
-        return _item['name'] === _elmInput.getAttribute('name');
-      });
-      const isChecked = checkOrRadioInputStatuses.some((_item) => {
-        return !_item['isError'];
-      });
-      if (isChecked) {
-        this.toggleFormErrorMessage(false);
+      const ElmsCheckOrRadio = [
+        ...document.querySelectorAll(`input[name="${targetInputStatus['name']}"]`),
+      ];
+      const getIsAnyChecked = () => {
+        return ElmsCheckOrRadio.some((_elm) => {
+          return _elm.checked;
+        });
+      };
+      const toggleAllCheckOrRadioRequired = (_value) => {
+        ElmsCheckOrRadio.forEach((_elm) => {
+          _elm.required = _value;
+        });
+      };
+      if (getIsAnyChecked()) {
+        toggleAllCheckOrRadioRequired(false);
+        changeInputStatusArray(false);
       } else {
-        this.toggleFormErrorMessage(true);
+        toggleAllCheckOrRadioRequired(true);
+        changeInputStatusArray(true);
         this.createInputErrorMessage(_elmInput);
       }
       return;
     }
+
     // バリデーションチェックやエラーメッセージの描画などを実行
     if (isError) {
       _elmInput.classList.add(this.classErrorInput);
-      this.createInputErrorMessage(_elmInput);
-      this.toggleFormErrorMessage(true);
       changeInputStatusArray(true);
+      this.createInputErrorMessage(_elmInput);
     } else {
-      _elmInput.classList.add(this.classSecureInput);
-      this.toggleFormErrorMessage(false);
       changeInputStatusArray(false);
+      _elmInput.classList.add(this.classSecureInput);
     }
     return;
   }
@@ -174,9 +188,14 @@ export default class FormValidator {
      * Input
      */
     this.elmTargetInputs.forEach((_elmTargetInput) => {
-      // フォーカスアウト時
+      // 入力時
       _elmTargetInput.addEventListener('change', (_ev) => {
         this.validate(_elmTargetInput);
+        this.isFirstSubmit
+          ? this.getIsFormError()
+            ? this.toggleFormErrorMessage(true)
+            : this.toggleFormErrorMessage(false)
+          : false;
       });
       // エラー時
       _elmTargetInput.addEventListener('invalid', (_ev) => {
@@ -185,12 +204,22 @@ export default class FormValidator {
     });
 
     /**
+     * SubmitBtn
+     */
+    this.elmSubmitBtn.addEventListener('click', (_ev) => {
+      this.isFirstSubmit = true;
+      this.getIsFormError()
+        ? this.toggleFormErrorMessage(true)
+        : this.toggleFormErrorMessage(false);
+    });
+
+    /**
      * Form
      */
     this.elmForm.addEventListener('submit', (_ev) => {
       _ev.preventDefault();
-      if (!this.getIsError()) {
-        console.log('Submit!');
+      if (!this.getIsFormError()) {
+        console.log('Validate OK!');
         // this.elmForm.submit();
       }
     });
