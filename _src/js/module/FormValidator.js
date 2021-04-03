@@ -188,7 +188,7 @@ export default class FormValidator {
      * Input
      */
     this.elmTargetInputs.forEach((_elmTargetInput) => {
-      // フォーカスアウト時
+      // 入力時
       _elmTargetInput.addEventListener('change', (_ev) => {
         this.validate(_elmTargetInput);
         this.isFirstSubmit

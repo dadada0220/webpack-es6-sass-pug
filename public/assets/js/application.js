@@ -553,7 +553,7 @@ var FormValidator = /*#__PURE__*/function () {
        * Input
        */
       this.elmTargetInputs.forEach(function (_elmTargetInput) {
-        // フォーカスアウト時
+        // 入力時
         _elmTargetInput.addEventListener('change', function (_ev) {
           _this.validate(_elmTargetInput);
 
