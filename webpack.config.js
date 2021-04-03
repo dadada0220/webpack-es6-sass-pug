@@ -12,13 +12,12 @@ const TerserPlugin = require('terser-webpack-plugin');
  */
 const dir = {
   src: path.join(__dirname, '_src'),
-  public: path.join(__dirname, 'public')
+  public: path.join(__dirname, 'public'),
 };
 
 /**
  * sassとjsの設定を定義
  */
-
 const scssAndJsConfig = {
   entry: {
     application: path.resolve(dir.src, 'js/_index.js'),
@@ -26,13 +25,13 @@ const scssAndJsConfig = {
   },
   output: {
     filename: 'js/[name].js',
-    path: path.resolve(dir.public, 'assets')
+    path: path.resolve(dir.public, 'assets'),
   },
   plugins: [
     new FixStyleOnlyEntriesPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/[name]',
-    })
+    }),
   ],
   resolve: {
     modules: ['node_modules'],
@@ -48,28 +47,30 @@ const scssAndJsConfig = {
           compress: true,
           output: {
             comments: false,
-            beautify: false
-          }
-        }
-      })
+            beautify: false,
+          },
+        },
+      }),
     ],
   },
   module: {
-    rules: [{
+    rules: [
+      {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              '@babel/preset-env',
-            ]
-          }
-        }]
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+            },
+          },
+        ],
       },
       {
         test: /\.(sass|scss|css)$/,
-        use: [{
+        use: [
+          {
             loader: MiniCssExtractPlugin.loader,
           },
           {
@@ -77,7 +78,7 @@ const scssAndJsConfig = {
             options: {
               url: false,
               sourceMap: true,
-              importLoaders: 2
+              importLoaders: 2,
             },
           },
           {
@@ -86,73 +87,75 @@ const scssAndJsConfig = {
               sourceMap: true,
               plugins: [
                 require('autoprefixer')({
-                  grid: true
-                })
-              ]
-            }
+                  grid: true,
+                }),
+              ],
+            },
           },
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: true
-            }
-          }
-        ]
-      }
-    ]
-  }
-}
+              sourceMap: true,
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
 
 /**
  * pugの設定を定義
  */
+const from = 'pug';
+const to = 'html';
+const entry = {};
 
-const from = 'pug'
-const to = 'html'
-const entry = {}
-
-globule.find([`**/*.${from}`, `!**/_*.${from}`], {
-  cwd: dir.src
-}).forEach(filename => {
-  let _output = filename.replace(new RegExp(`.${from}$`, 'i'), `.${to}`);
-  let _source = path.join(dir.src, filename);
-  if (_output.indexOf('pug/') !== -1) {
-    _output = _output.replace('pug/', '');
-    entry[_output] = _source;
-  }
-});
+globule
+  .find([`**/*.${from}`, `!**/_*.${from}`], {
+    cwd: dir.src,
+  })
+  .forEach((filename) => {
+    let _output = filename.replace(new RegExp(`.${from}$`, 'i'), `.${to}`);
+    let _source = path.join(dir.src, filename);
+    if (_output.indexOf('pug/') !== -1) {
+      _output = _output.replace('pug/', '');
+      entry[_output] = _source;
+    }
+  });
 
 const pugConfig = {
   entry: entry,
   output: {
     filename: '[name]',
     publicPath: '/',
-    path: dir.public
+    path: dir.public,
   },
   module: {
-    rules: [{
-      test: /\.pug$/,
-      use: ExtractTextPlugin.extract({
-        use: [
-          'html-loader',
-          {
-            loader: 'pug-html-loader',
-            options: {
-              pretty: true,
-            }
-          }
-        ]
-      })
-    }]
+    rules: [
+      {
+        test: /\.pug$/,
+        use: ExtractTextPlugin.extract({
+          use: [
+            'html-loader',
+            {
+              loader: 'pug-html-loader',
+              options: {
+                pretty: true,
+              },
+            },
+          ],
+        }),
+      },
+    ],
   },
   plugins: [new ExtractTextPlugin('[name]')],
-}
+};
 
 /**
  * 実行
  */
-
 module.exports = [
   scssAndJsConfig,
-  pugConfig
+  pugConfig, // pugを使わない場合は、この行をコメントアウト
 ];
