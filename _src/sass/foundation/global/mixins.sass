@@ -10,8 +10,6 @@
   background-repeat: $repeat
   background-position: 50% 50%
 
-
-
 // # アイコン（背景画像）
 // #################################################
 
@@ -20,8 +18,6 @@
   background-size: $width $height
   width: $width
   height: $height
-
-
 
 // # メディアクエリ
 // #################################################
@@ -37,8 +33,6 @@
 =screen($breakPoint_min, $breakPoint_max)
   @media screen and (min-width: $breakPoint_min) and (max-width: $breakPoint_max)
     @content
-
-
 
 // # 要素を中央配置
 // #################################################
@@ -64,8 +58,6 @@
       transform: translateY(-50%) $other_transform
     @else
       transform: translateY(-50%)
-
-
 
 // # 三角形を生成
 // #################################################
@@ -125,8 +117,6 @@
   @if ($direction == left-top)
     transform: rotate(0deg)
 
-
-
 // # テキストに下線（複数行対応）
 // #################################################
 
@@ -134,7 +124,12 @@
   display: inline
   background: linear-gradient(transparent $height, $color 0%)
 
-
+// # カウンターインクリメント
+// #################################################
+// 親要素に「counter-reset: $num_name」を指定する
+=counter($num_name, $before_text, $after_text)
+  content: "#{$before_text}" counter(num_ + $num_name) "#{$after_text}"
+  counter-increment: num_ + $num_name
 
 // # ブラウザハック
 // #################################################
