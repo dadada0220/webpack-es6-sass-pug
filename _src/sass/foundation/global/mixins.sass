@@ -131,6 +131,14 @@
   content: "#{$before_text}" counter(num_ + $num_name) "#{$after_text}"
   counter-increment: num_ + $num_name
 
+// # スクロールバーを非表示
+// #################################################する
+=hide-scrollbar()
+  -ms-overflow-style: none
+  scrollbar-width: none
+  &::-webkit-scrollbar
+    display: none
+
 // # ブラウザハック
 // #################################################
 
